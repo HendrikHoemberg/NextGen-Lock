@@ -110,7 +110,7 @@ function AccessLogs() {
               onChange={(e) => setFilterStatus(e.target.value)}
               className="input-field"
             >
-              <option value="all">Alle Status</option>
+              <option value="all">Alle</option>
               <option value="granted">Gewährt</option>
               <option value="denied">Verweigert</option>
             </select>
