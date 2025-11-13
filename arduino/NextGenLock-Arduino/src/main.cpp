@@ -11,9 +11,23 @@
 #define LED_G_PIN 6 // Access granted
 #define LED_B_PIN 7 // rfid card/chip detected
 
+#define LED_ON LOW
+#define LED_OFF HIGH
+
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
 
-int pinLED=2;
+// int pinLED=2;
+void setStatusLED(bool statusOk) {
+  if (statusOk) {
+    digitalWrite(LED_R_PIN, LED_OFF);
+    digitalWrite(LED_G_PIN, LED_ON);
+    digitalWrite(LED_B_PIN, LED_OFF);
+  } else {
+    digitalWrite(LED_R_PIN, LED_ON);
+    digitalWrite(LED_G_PIN, LED_OFF);
+    digitalWrite(LED_B_PIN, LED_OFF);
+  }
+}
 
 void setup() 
 {
@@ -22,7 +36,13 @@ void setup()
   mfrc522.PCD_Init();   // Initiate MFRC522
   Serial.println("Please scan your RFID card...");
   Serial.println();
-  pinMode(pinLED, OUTPUT);
+
+  // pinMode(pinLED, OUTPUT);
+
+  pinMode(LED_R_PIN, OUTPUT);
+  pinMode(LED_G_PIN, OUTPUT);
+  pinMode(LED_B_PIN, OUTPUT);
+  setStatusLED(false);
 }
 
 void loop() 
@@ -30,15 +50,17 @@ void loop()
   // Wait for RFID cards to be scanned
   if ( ! mfrc522.PICC_IsNewCardPresent()) 
   {
+    setStatusLED(false);
     return;
   }
   // an RFID card has been scanned but no UID 
   if ( ! mfrc522.PICC_ReadCardSerial()) 
   {
+    setStatusLED(false);
     return;
   }
   //Show UID on serial monitor
-  digitalWrite(pinLED,HIGH);
+  // digitalWrite(pinLED,HIGH);
   Serial.print("USER ID tag :");
   String content= "";
  
@@ -50,6 +72,7 @@ void loop()
      content.concat(String(mfrc522.uid.uidByte[i], HEX));
   }
   delay(2000);
-  digitalWrite(pinLED,LOW);
+  // digitalWrite(pinLED,LOW);
+  setStatusLED(true);
   Serial.println();
 } 
