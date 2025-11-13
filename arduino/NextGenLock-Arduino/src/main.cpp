@@ -7,6 +7,10 @@
 #define SS_PIN 10 // Slave PIN
 #define RST_PIN 9 // Reset PIN
 
+#define LED_R_PIN 5 // Access denied
+#define LED_G_PIN 6 // Access granted
+#define LED_B_PIN 7 // rfid card/chip detected
+
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
 
 int pinLED=2;
@@ -45,7 +49,7 @@ void loop()
      content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
      content.concat(String(mfrc522.uid.uidByte[i], HEX));
   }
-  delay(1000);
+  delay(2000);
   digitalWrite(pinLED,LOW);
   Serial.println();
 } 
