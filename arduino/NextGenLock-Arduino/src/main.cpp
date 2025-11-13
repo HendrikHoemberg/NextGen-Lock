@@ -10,6 +10,7 @@
 #define LED_R_PIN 5 // Access denied
 #define LED_G_PIN 6 // Access granted
 #define LED_B_PIN 7 // rfid card/chip detected
+#define BUZZER 2 // Buzzer
 
 #define LED_ON HIGH
 #define LED_OFF LOW
@@ -61,6 +62,7 @@ void setup()
   pinMode(LED_R_PIN, OUTPUT);
   pinMode(LED_G_PIN, OUTPUT);
   pinMode(LED_B_PIN, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
   setStatusLED(IDLE);
 }
 
@@ -93,7 +95,8 @@ void loop()
      content.concat(String(mfrc522.uid.uidByte[i], HEX));
   }
   setStatusLED(ACCESS_GRANTED);
+  digitalWrite (BUZZER, HIGH);
   delay(2000);
-  // digitalWrite(pinLED,LOW);
+  digitalWrite (BUZZER, LOW);
   Serial.println();
 } 
