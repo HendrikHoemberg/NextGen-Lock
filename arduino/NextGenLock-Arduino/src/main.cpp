@@ -11,21 +11,40 @@
 #define LED_G_PIN 6 // Access granted
 #define LED_B_PIN 7 // rfid card/chip detected
 
-#define LED_ON LOW
-#define LED_OFF HIGH
+#define LED_ON HIGH
+#define LED_OFF LOW
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
 
-// int pinLED=2;
-void setStatusLED(bool statusOk) {
-  if (statusOk) {
-    digitalWrite(LED_R_PIN, LED_OFF);
-    digitalWrite(LED_G_PIN, LED_ON);
-    digitalWrite(LED_B_PIN, LED_OFF);
-  } else {
-    digitalWrite(LED_R_PIN, LED_ON);
-    digitalWrite(LED_G_PIN, LED_OFF);
-    digitalWrite(LED_B_PIN, LED_OFF);
+enum ledState {
+  ACCESS_GRANTED,
+  ACCESS_DENIED,
+  RFID_DETECTED,
+  IDLE
+};
+
+void setStatusLED(enum ledState state) {
+  switch(state) {
+    case ACCESS_GRANTED:
+      digitalWrite(LED_R_PIN, LED_OFF);
+      digitalWrite(LED_G_PIN, LED_ON);
+      digitalWrite(LED_B_PIN, LED_OFF); //inverse logic, LED_ON turns blue off and vice versa
+      break;
+    case ACCESS_DENIED:
+      digitalWrite(LED_R_PIN, LED_ON);
+      digitalWrite(LED_G_PIN, LED_OFF);
+      digitalWrite(LED_B_PIN, LED_OFF); //inverse logic, LED_ON turns blue off and vice versa
+      break;
+    case RFID_DETECTED:
+      digitalWrite(LED_R_PIN, LED_OFF);
+      digitalWrite(LED_G_PIN, LED_OFF);
+      digitalWrite(LED_B_PIN, LED_ON); //inverse logic, LED_OFF turns blue on
+      break;
+    case IDLE:
+      digitalWrite(LED_R_PIN, LED_OFF);
+      digitalWrite(LED_G_PIN, LED_OFF);
+      digitalWrite(LED_B_PIN, LED_OFF); //inverse logic, LED_ON turns blue off and vice versa
+      break;      
   }
 }
 
@@ -42,7 +61,7 @@ void setup()
   pinMode(LED_R_PIN, OUTPUT);
   pinMode(LED_G_PIN, OUTPUT);
   pinMode(LED_B_PIN, OUTPUT);
-  setStatusLED(false);
+  setStatusLED(IDLE);
 }
 
 void loop() 
@@ -50,19 +69,21 @@ void loop()
   // Wait for RFID cards to be scanned
   if ( ! mfrc522.PICC_IsNewCardPresent()) 
   {
-    setStatusLED(false);
+    setStatusLED(IDLE);
     return;
   }
   // an RFID card has been scanned but no UID 
   if ( ! mfrc522.PICC_ReadCardSerial()) 
   {
-    setStatusLED(false);
+    setStatusLED(IDLE);
     return;
   }
   //Show UID on serial monitor
   // digitalWrite(pinLED,HIGH);
   Serial.print("USER ID tag :");
   String content= "";
+  setStatusLED(RFID_DETECTED);
+  delay(2000);
  
   for (byte i = 0; i < mfrc522.uid.size; i++) 
   {
@@ -71,8 +92,8 @@ void loop()
      content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
      content.concat(String(mfrc522.uid.uidByte[i], HEX));
   }
+  setStatusLED(ACCESS_GRANTED);
   delay(2000);
   // digitalWrite(pinLED,LOW);
-  setStatusLED(true);
   Serial.println();
 } 
