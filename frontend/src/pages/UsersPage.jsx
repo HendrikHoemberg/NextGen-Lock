@@ -25,8 +25,8 @@ function UserModal({ user, onClose, onSave }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
-      <div className="w-full max-w-md p-6 bg-white rounded-lg">
-        <h2 className="mb-4 text-2xl font-bold">
+      <div className="w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg">
+        <h2 className="mb-4 text-2xl font-bold dark:text-white">
           {user ? 'Benutzer bearbeiten' : 'Neuer Benutzer'}
         </h2>
         <form onSubmit={handleSubmit}>
@@ -113,13 +113,13 @@ function UserCard({ user, onEdit, onDelete, onViewCards }) {
     <div className="transition-shadow card hover:shadow-lg">
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
             {user.first_name} {user.last_name}
           </h3>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             ID: {user.user_id}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             Registriert: {format(new Date(user.created_at), 'dd.MM.yyyy', { locale: de })}
           </p>
         </div>
@@ -127,7 +127,7 @@ function UserCard({ user, onEdit, onDelete, onViewCards }) {
           <button
             onClick={() => onEdit(user)}
             disabled={processing}
-            className={`p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer ${
+            className={`p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors cursor-pointer ${
               processing ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             title="Bearbeiten"
@@ -137,7 +137,7 @@ function UserCard({ user, onEdit, onDelete, onViewCards }) {
           <button
             onClick={handleDelete}
             disabled={processing}
-            className={`p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer ${
+            className={`p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer ${
               processing ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             title="Löschen"
@@ -151,22 +151,22 @@ function UserCard({ user, onEdit, onDelete, onViewCards }) {
         </div>
       </div>
 
-      <div className="pt-4 mt-4 border-t">
+      <div className="pt-4 mt-4 border-t dark:border-gray-700">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
             <CreditCard className="w-4 h-4" />
             <span>
               {loading ? '...' : `${cards.length} Karte${cards.length !== 1 ? 'n' : ''}`}
             </span>
             {!loading && cards.length > 0 && (
-              <span className="ml-2 font-medium text-green-600">
+              <span className="ml-2 font-medium text-green-600 dark:text-green-400">
                 ({authorizedCount} autorisiert)
               </span>
             )}
           </div>
           <button
             onClick={() => onViewCards(user)}
-            className="text-sm font-medium text-blue-600 cursor-pointer hover:text-blue-700"
+            className="text-sm font-medium text-blue-600 dark:text-blue-400 cursor-pointer hover:text-blue-700 dark:hover:text-blue-300"
           >
             Karten anzeigen →
           </button>
@@ -248,8 +248,8 @@ function UsersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Benutzer</h1>
-          <p className="mt-1 text-gray-600">Verwaltung aller registrierten Benutzer</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Benutzer</h1>
+          <p className="mt-1 text-gray-600 dark:text-gray-400">Verwaltung aller registrierten Benutzer</p>
         </div>
         <button
           onClick={() => {
@@ -267,8 +267,8 @@ function UsersPage() {
       <div className="card">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-600">Registrierte Benutzer</p>
-            <p className="mt-1 text-3xl font-bold text-gray-900">{users.length}</p>
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Registrierte Benutzer</p>
+            <p className="mt-1 text-3xl font-bold text-gray-900 dark:text-white">{users.length}</p>
           </div>
           <div className="flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full">
             <UserPlus className="w-8 h-8 text-white" />
@@ -280,7 +280,7 @@ function UsersPage() {
       {users.length === 0 ? (
         <div className="py-12 text-center card">
           <UserPlus className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-          <p className="text-gray-500">Noch keine Benutzer registriert</p>
+          <p className="text-gray-500 dark:text-gray-400">Noch keine Benutzer registriert</p>
           <button
             onClick={() => setShowModal(true)}
             className="mt-4 btn-primary"

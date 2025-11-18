@@ -27,8 +27,8 @@ function CardModal({ card, users, onClose, onSave }) {
 
   return (
     <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-4 dark:text-white">
           {card ? 'Karte bearbeiten' : 'Neue RFID-Karte'}
         </h2>
         <form onSubmit={handleSubmit}>
@@ -45,7 +45,7 @@ function CardModal({ card, users, onClose, onSave }) {
                 disabled={!!card || saving}
               />
               {card && (
-                <p className="text-xs text-gray-500 mt-1">UID kann nicht geändert werden</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">UID kann nicht geändert werden</p>
               )}
             </div>
             <div>
@@ -74,7 +74,7 @@ function CardModal({ card, users, onClose, onSave }) {
                 className="h-4 w-4 text-blue-600 rounded"
                 disabled={saving}
               />
-              <label htmlFor="authorized" className="text-sm font-medium text-gray-700">
+              <label htmlFor="authorized" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Karte autorisieren
               </label>
             </div>
@@ -125,20 +125,20 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
   }
 
   return (
-    <div className={`card ${card.authorized ? 'border-l-4 border-green-500' : 'border-l-4 border-gray-300'}`}>
+    <div className={`card ${card.authorized ? 'border-l-4 border-green-500' : 'border-l-4 border-gray-300 dark:border-gray-600'}`}>
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <code className="text-sm font-mono bg-gray-100 px-3 py-1 rounded font-semibold">
+            <code className="text-sm font-mono bg-gray-100 dark:bg-gray-700 dark:text-gray-200 px-3 py-1 rounded font-semibold">
               {card.card_id}
             </code>
             {card.authorized ? (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
                 <Check className="h-3 w-3 mr-1" />
                 Autorisiert
               </span>
             ) : (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
                 <X className="h-3 w-3 mr-1" />
                 Nicht autorisiert
               </span>
@@ -146,13 +146,13 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
           </div>
 
           {user && (
-            <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-1">
               <User className="h-4 w-4" />
               <span>{user.first_name} {user.last_name}</span>
             </div>
           )}
 
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             Hinzugefügt: {format(new Date(card.added_on), 'dd.MM.yyyy HH:mm', { locale: de })}
           </p>
         </div>
@@ -165,8 +165,8 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
               processing ? 'opacity-50 cursor-not-allowed' : ''
             } ${
               card.authorized
-                ? 'text-orange-600 hover:bg-orange-50'
-                : 'text-green-600 hover:bg-green-50'
+                ? 'text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20'
+                : 'text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
             }`}
             title={card.authorized ? 'Autorisierung widerrufen' : 'Autorisieren'}
           >
@@ -181,7 +181,7 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
           <button
             onClick={() => onEdit(card)}
             disabled={processing}
-            className={`p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer ${
+            className={`p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors cursor-pointer ${
               processing ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             title="Bearbeiten"
@@ -191,7 +191,7 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
           <button
             onClick={handleDelete}
             disabled={processing}
-            className={`p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer ${
+            className={`p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer ${
               processing ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             title="Löschen"
@@ -355,8 +355,8 @@ function RFIDCards() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">RFID-Karten</h1>
-          <p className="text-gray-600 mt-1">Verwaltung aller RFID-Zugangs karten</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">RFID-Karten</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Verwaltung aller RFID-Zugangs karten</p>
         </div>
         <button
           onClick={() => {
@@ -372,17 +372,17 @@ function RFIDCards() {
 
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="card bg-blue-50">
-          <p className="text-sm text-blue-600 font-medium">Gesamt</p>
-          <p className="text-2xl font-bold text-blue-900">{cards.length}</p>
+        <div className="card bg-blue-50 dark:bg-blue-900/20">
+          <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">Gesamt</p>
+          <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{cards.length}</p>
         </div>
-        <div className="card bg-green-50">
-          <p className="text-sm text-green-600 font-medium">Autorisiert</p>
-          <p className="text-2xl font-bold text-green-900">{authorizedCount}</p>
+        <div className="card bg-green-50 dark:bg-green-900/20">
+          <p className="text-sm text-green-600 dark:text-green-400 font-medium">Autorisiert</p>
+          <p className="text-2xl font-bold text-green-900 dark:text-green-100">{authorizedCount}</p>
         </div>
-        <div className="card bg-red-50">
-          <p className="text-sm text-red-600 font-medium">Nicht autorisiert</p>
-          <p className="text-2xl font-bold text-gray-900">{cards.length - authorizedCount}</p>
+        <div className="card bg-red-50 dark:bg-red-900/20">
+          <p className="text-sm text-red-600 dark:text-red-400 font-medium">Nicht autorisiert</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">{cards.length - authorizedCount}</p>
         </div>
       </div>
 
@@ -419,7 +419,7 @@ function RFIDCards() {
             className={`px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${
               filter === 'all'
                 ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
             Alle ({baseCards.length})
@@ -429,7 +429,7 @@ function RFIDCards() {
             className={`px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${
               filter === 'authorized'
                 ? 'bg-green-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
             Autorisiert ({filteredAuthCount})
@@ -439,20 +439,20 @@ function RFIDCards() {
             className={`px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${
               filter === 'unauthorized'
                 ? 'bg-red-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
             Nicht autorisiert ({filteredUnAuthCount})
           </button>
           
-          <div className="w-px h-8 bg-gray-300 mx-2"></div>
+          <div className="w-px h-8 bg-gray-300 dark:bg-gray-600 mx-2"></div>
           
           <button
             onClick={() => setAssignmentFilter(assignmentFilter === 'unassigned' ? 'all' : 'unassigned')}
             className={`px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${
               assignmentFilter === 'unassigned'
                 ? 'bg-red-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             }`}
           >
             Ohne Benutzer ({unassignedCount})
@@ -463,8 +463,8 @@ function RFIDCards() {
       {/* Cards List */}
       {filteredCards.length === 0 ? (
         <div className="card text-center py-12">
-          <CreditCardIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">
+          <CreditCardIcon className="h-12 w-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+          <p className="text-gray-500 dark:text-gray-400">
             {filter === 'all' 
               ? 'Noch keine RFID-Karten registriert'
               : `Keine ${filter === 'authorized' ? 'autorisierten' : 'nicht autorisierten'} Karten gefunden`

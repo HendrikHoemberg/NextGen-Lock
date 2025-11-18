@@ -9,8 +9,8 @@ function StatCard({ title, value, icon: Icon, color }) {
     <div className="card">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-3xl font-bold text-gray-900 mt-2">{value}</p>
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">{value}</p>
         </div>
         <div className={`p-3 rounded-full ${color}`}>
           <Icon className="h-8 w-8 text-white" />
@@ -24,27 +24,27 @@ function RecentAccessLog({ log }) {
   const isGranted = log.access_granted
   
   return (
-    <div className={`p-4 border-l-4 ${isGranted ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'} rounded-r-lg mb-3`}>
+    <div className={`p-4 border-l-4 ${isGranted ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-red-500 bg-red-50 dark:bg-red-900/20'} rounded-r-lg mb-3`}>
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3">
           {isGranted ? (
-            <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+            <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5" />
           ) : (
-            <XCircle className="h-5 w-5 text-red-600 mt-0.5" />
+            <XCircle className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5" />
           )}
           <div>
-            <p className="font-medium text-gray-900">
+            <p className="font-medium text-gray-900 dark:text-white">
               {isGranted ? 'Zugriff gewährt' : 'Zugriff verweigert'}
             </p>
-            <p className="text-sm text-gray-600">UID: {log.card_uid}</p>
-            {log.note && <p className="text-sm text-gray-500 italic">{log.note}</p>}
+            <p className="text-sm text-gray-600 dark:text-gray-400">UID: {log.card_uid}</p>
+            {log.note && <p className="text-sm text-gray-500 dark:text-gray-400 italic">{log.note}</p>}
           </div>
         </div>
         <div className="text-right">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             {format(new Date(log.access_time), 'dd.MM.yyyy', { locale: de })}
           </p>
-          <p className="text-sm font-medium text-gray-700">
+          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {format(new Date(log.access_time), 'HH:mm:ss', { locale: de })}
           </p>
         </div>
@@ -102,8 +102,8 @@ function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600 mt-1">Übersicht über das RFID-Zugangssystem</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1">Übersicht über das RFID-Zugangssystem</p>
       </div>
 
       {/* Statistics Cards */}
@@ -125,14 +125,14 @@ function Dashboard() {
       {/* Recent Access Logs */}
       <div className="card">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900">Letzte Zugriffe</h2>
-          <a href="/logs" className="text-blue-600 hover:text-blue-700 text-sm font-medium">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">Letzte Zugriffe</h2>
+          <a href="/logs" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">
             Alle anzeigen →
           </a>
         </div>
         
         {recentLogs.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">Keine Zugriffe vorhanden</p>
+          <p className="text-gray-500 dark:text-gray-400 text-center py-8">Keine Zugriffe vorhanden</p>
         ) : (
           <div>
             {recentLogs.map((log) => (

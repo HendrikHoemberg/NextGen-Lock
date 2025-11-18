@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -41,6 +42,15 @@ body {
   .btn-secondary:hover {
     background-color: rgb(209, 213, 219);
   }
+
+  .dark .btn-secondary {
+    background-color: rgb(55, 65, 81);
+    color: white;
+  }
+  
+  .dark .btn-secondary:hover {
+    background-color: rgb(75, 85, 99);
+  }
   
   .btn-success {
     background-color: rgb(22, 163, 74);
@@ -78,6 +88,11 @@ body {
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
     padding: 1.5rem;
   }
+
+  .dark .card {
+    background-color: rgb(31, 41, 55);
+    color: white;
+  }
   
   .input-field {
     width: 100%;
@@ -91,6 +106,12 @@ body {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 0 0 1px rgb(59, 130, 246);
     border-color: rgb(59, 130, 246);
   }
+
+  .dark .input-field {
+    background-color: rgb(55, 65, 81);
+    border-color: rgb(75, 85, 99);
+    color: white;
+  }
   
   .label {
     display: block;
@@ -98,5 +119,9 @@ body {
     font-weight: 500;
     color: rgb(55, 65, 81);
     margin-bottom: 0.25rem;
+  }
+
+  .dark .label {
+    color: rgb(209, 213, 219);
   }
 }
