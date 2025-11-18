@@ -29,22 +29,22 @@ void setStatusLED(enum ledState state) {
     case ACCESS_GRANTED:
       digitalWrite(LED_R_PIN, LED_OFF);
       digitalWrite(LED_G_PIN, LED_ON);
-      digitalWrite(LED_B_PIN, LED_OFF); //inverse logic, LED_ON turns blue off and vice versa
+      digitalWrite(LED_B_PIN, LED_OFF); 
       break;
     case ACCESS_DENIED:
       digitalWrite(LED_R_PIN, LED_ON);
       digitalWrite(LED_G_PIN, LED_OFF);
-      digitalWrite(LED_B_PIN, LED_OFF); //inverse logic, LED_ON turns blue off and vice versa
+      digitalWrite(LED_B_PIN, LED_OFF); 
       break;
     case RFID_DETECTED:
       digitalWrite(LED_R_PIN, LED_OFF);
       digitalWrite(LED_G_PIN, LED_OFF);
-      digitalWrite(LED_B_PIN, LED_ON); //inverse logic, LED_OFF turns blue on
+      digitalWrite(LED_B_PIN, LED_ON); 
       break;
     case IDLE:
       digitalWrite(LED_R_PIN, LED_OFF);
       digitalWrite(LED_G_PIN, LED_OFF);
-      digitalWrite(LED_B_PIN, LED_OFF); //inverse logic, LED_ON turns blue off and vice versa
+      digitalWrite(LED_B_PIN, LED_OFF); 
       break;      
   }
 }
