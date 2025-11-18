@@ -3,6 +3,7 @@ import { de } from 'date-fns/locale'
 import { Check, CreditCard as CreditCardIcon, Edit2, Plus, Search, Trash2, User, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import ConfirmModal from '../components/ConfirmModal'
 import { cardsAPI, usersAPI } from '../services/api'
 
 function CardModal({ card, users, onClose, onSave }) {
@@ -216,6 +217,8 @@ function RFIDCards() {
   const [editingCard, setEditingCard] = useState(null)
   const [filter, setFilter] = useState('all')
   const [userFilter, setUserFilter] = useState('')
+  const [assignmentFilter, setAssignmentFilter] = useState('all')
+  const [confirmDelete, setConfirmDelete] = useState(null)
 
   useEffect(() => {
     loadData()
@@ -260,7 +263,12 @@ function RFIDCards() {
   }
 
   const handleDeleteCard = async (cardId) => {
-    if (!confirm('Möchten Sie diese Karte wirklich löschen?')) return
+    setConfirmDelete(cardId)
+  }
+
+  const confirmDeleteCard = async () => {
+    const cardId = confirmDelete
+    setConfirmDelete(null)
 
     try {
       await cardsAPI.delete(cardId)
@@ -290,18 +298,50 @@ function RFIDCards() {
     if (filter === 'authorized' && !card.authorized) return false
     if (filter === 'unauthorized' && card.authorized) return false
     
-    // Filter by user name
+    // Filter by assignment status
+    if (assignmentFilter === 'assigned' && !card.user_id) return false
+    if (assignmentFilter === 'unassigned' && card.user_id) return false
+    
+    // Filter by user name or card UID
     if (userFilter) {
+      const searchTerm = userFilter.toLowerCase()
+      const cardUid = card.card_id.toLowerCase()
       const user = users.find(u => u.user_id === card.user_id)
-      if (!user) return false
-      const fullName = `${user.first_name} ${user.last_name}`.toLowerCase()
-      if (!fullName.includes(userFilter.toLowerCase())) return false
+      const fullName = user ? `${user.first_name} ${user.last_name}`.toLowerCase() : ''
+      
+      if (!cardUid.includes(searchTerm) && !fullName.includes(searchTerm)) {
+        return false
+      }
     }
     
     return true
   })
 
   const authorizedCount = cards.filter(card => card.authorized).length
+  const assignedCount = cards.filter(card => card.user_id).length
+  const unassignedCount = cards.filter(card => !card.user_id).length
+
+  // Get counts based on active filters (assignment + search text)
+  let baseCards = cards
+  
+  // Apply assignment filter
+  if (assignmentFilter === 'unassigned') {
+    baseCards = baseCards.filter(card => !card.user_id)
+  }
+  
+  // Apply search filter
+  if (userFilter) {
+    const searchTerm = userFilter.toLowerCase()
+    baseCards = baseCards.filter(card => {
+      const cardUid = card.card_id.toLowerCase()
+      const user = users.find(u => u.user_id === card.user_id)
+      const fullName = user ? `${user.first_name} ${user.last_name}`.toLowerCase() : ''
+      return cardUid.includes(searchTerm) || fullName.includes(searchTerm)
+    })
+  }
+  
+  const filteredAuthCount = baseCards.filter(card => card.authorized).length
+  const filteredUnAuthCount = baseCards.filter(card => !card.authorized).length
 
   if (loading) {
     return (
@@ -352,7 +392,7 @@ function RFIDCards() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
           <input
             type="text"
-            placeholder="Nach Benutzer filtern..."
+            placeholder="Nach Benutzer oder UID filtern..."
             value={userFilter}
             onChange={(e) => setUserFilter(e.target.value)}
             className="input-field pl-10"
@@ -373,7 +413,7 @@ function RFIDCards() {
 
       {/* Status Filter */}
       <div className="card">
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <button
             onClick={() => setFilter('all')}
             className={`px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${
@@ -382,7 +422,7 @@ function RFIDCards() {
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            Alle ({cards.length})
+            Alle ({baseCards.length})
           </button>
           <button
             onClick={() => setFilter('authorized')}
@@ -392,7 +432,7 @@ function RFIDCards() {
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            Autorisiert ({authorizedCount})
+            Autorisiert ({filteredAuthCount})
           </button>
           <button
             onClick={() => setFilter('unauthorized')}
@@ -402,7 +442,20 @@ function RFIDCards() {
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            Nicht autorisiert ({cards.length - authorizedCount})
+            Nicht autorisiert ({filteredUnAuthCount})
+          </button>
+          
+          <div className="w-px h-8 bg-gray-300 mx-2"></div>
+          
+          <button
+            onClick={() => setAssignmentFilter(assignmentFilter === 'unassigned' ? 'all' : 'unassigned')}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${
+              assignmentFilter === 'unassigned'
+                ? 'bg-red-600 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            Ohne Benutzer ({unassignedCount})
           </button>
         </div>
       </div>
@@ -454,6 +507,19 @@ function RFIDCards() {
             setEditingCard(null)
           }}
           onSave={handleSaveCard}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {confirmDelete && (
+        <ConfirmModal
+          title="Karte löschen"
+          message="Möchten Sie diese Karte wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+          confirmText="Löschen"
+          cancelText="Abbrechen"
+          variant="danger"
+          onConfirm={confirmDeleteCard}
+          onCancel={() => setConfirmDelete(null)}
         />
       )}
     </div>
