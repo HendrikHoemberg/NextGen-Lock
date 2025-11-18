@@ -343,6 +343,18 @@ app.get('/api/logs', (request, response) => {
   }
 });
 
+// GET recent logs
+app.get('/api/logs/recent', (request, response) => {
+  const limit = request.query.limit || 10;
+  
+  try {
+    const logs = db.prepare('SELECT * FROM access_log ORDER BY access_time DESC LIMIT ?').all(parseInt(limit));
+    response.json(logs);
+  } catch (error) {
+    response.status(500).json({ error: error.message });
+  }
+});
+
 // GET log by ID
 app.get('/api/logs/:id', (request, response) => {
   try {
@@ -352,18 +364,6 @@ app.get('/api/logs/:id', (request, response) => {
       return;
     }
     response.json(log);
-  } catch (error) {
-    response.status(500).json({ error: error.message });
-  }
-});
-
-// GET recent logs
-app.get('/api/logs/recent', (request, response) => {
-  const limit = request.query.limit || 10;
-  
-  try {
-    const logs = db.prepare('SELECT * FROM access_log ORDER BY access_time DESC LIMIT ?').all(parseInt(limit));
-    response.json(logs);
   } catch (error) {
     response.status(500).json({ error: error.message });
   }

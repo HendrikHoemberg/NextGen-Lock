@@ -35,4 +35,8 @@ echo Press Ctrl+C to stop both servers
 echo.
 
 cd /d %~dp0\frontend
+
+REM Open frontend in browser
+start http://localhost:3000
+
 npm run dev

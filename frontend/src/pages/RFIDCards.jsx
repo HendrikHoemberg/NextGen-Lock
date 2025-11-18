@@ -25,7 +25,7 @@ function CardModal({ card, users, onClose, onSave }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">
           {card ? 'Karte bearbeiten' : 'Neue RFID-Karte'}
@@ -160,7 +160,7 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
           <button
             onClick={handleToggleAuth}
             disabled={processing}
-            className={`p-2 rounded-lg transition-colors ${
+            className={`p-2 rounded-lg transition-colors cursor-pointer ${
               processing ? 'opacity-50 cursor-not-allowed' : ''
             } ${
               card.authorized
@@ -180,7 +180,7 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
           <button
             onClick={() => onEdit(card)}
             disabled={processing}
-            className={`p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors ${
+            className={`p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer ${
               processing ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             title="Bearbeiten"
@@ -190,7 +190,7 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
           <button
             onClick={handleDelete}
             disabled={processing}
-            className={`p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors ${
+            className={`p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer ${
               processing ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             title="Löschen"
@@ -376,7 +376,7 @@ function RFIDCards() {
         <div className="flex gap-2">
           <button
             onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${
               filter === 'all'
                 ? 'bg-blue-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -386,7 +386,7 @@ function RFIDCards() {
           </button>
           <button
             onClick={() => setFilter('authorized')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${
               filter === 'authorized'
                 ? 'bg-green-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -396,7 +396,7 @@ function RFIDCards() {
           </button>
           <button
             onClick={() => setFilter('unauthorized')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg font-medium transition-colors cursor-pointer ${
               filter === 'unauthorized'
                 ? 'bg-red-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'

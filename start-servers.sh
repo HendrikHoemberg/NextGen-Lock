@@ -37,5 +37,12 @@ echo -e "\033[1;32mBackend: http://localhost:5000\033[0m"
 echo -e "\033[1;32mFrontend: http://localhost:3000\033[0m"
 echo -e "\n\033[1;36mPress Ctrl+C to stop both servers\033[0m\n"
 
+# Open frontend in browser
+if command -v xdg-open > /dev/null; then
+    xdg-open "http://localhost:3000" &
+elif command -v open > /dev/null; then
+    open "http://localhost:3000" &
+fi
+
 cd "$SCRIPT_DIR/frontend"
 npm run dev

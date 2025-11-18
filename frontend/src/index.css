@@ -20,6 +20,7 @@ body {
     border-radius: 0.5rem;
     transition-property: background-color;
     transition-duration: 150ms;
+    cursor: pointer;
   }
   
   .btn-primary:hover {
@@ -34,6 +35,7 @@ body {
     border-radius: 0.5rem;
     transition-property: background-color;
     transition-duration: 150ms;
+    cursor: pointer;
   }
   
   .btn-secondary:hover {
@@ -48,6 +50,7 @@ body {
     border-radius: 0.5rem;
     transition-property: background-color;
     transition-duration: 150ms;
+    cursor: pointer;
   }
   
   .btn-success:hover {
@@ -62,6 +65,7 @@ body {
     border-radius: 0.5rem;
     transition-property: background-color;
     transition-duration: 150ms;
+    cursor: pointer;
   }
   
   .btn-danger:hover {

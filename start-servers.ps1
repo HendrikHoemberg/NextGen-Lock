@@ -31,6 +31,9 @@ Write-Host "Backend: http://localhost:5000" -ForegroundColor Green
 Write-Host "Frontend: http://localhost:3000" -ForegroundColor Green
 Write-Host "`nPress Ctrl+C to stop both servers`n" -ForegroundColor Cyan
 
+# Open frontend in browser
+Start-Process "http://localhost:3000"
+
 Set-Location "$PSScriptRoot\frontend"
 try {
     npm run dev

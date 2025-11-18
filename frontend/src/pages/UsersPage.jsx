@@ -23,7 +23,7 @@ function UserModal({ user, onClose, onSave }) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}>
       <div className="bg-white rounded-lg p-6 w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">
           {user ? 'Benutzer bearbeiten' : 'Neuer Benutzer'}
@@ -126,7 +126,7 @@ function UserCard({ user, onEdit, onDelete, onViewCards }) {
           <button
             onClick={() => onEdit(user)}
             disabled={processing}
-            className={`p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors ${
+            className={`p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer ${
               processing ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             title="Bearbeiten"
@@ -136,7 +136,7 @@ function UserCard({ user, onEdit, onDelete, onViewCards }) {
           <button
             onClick={handleDelete}
             disabled={processing}
-            className={`p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors ${
+            className={`p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer ${
               processing ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             title="Löschen"
@@ -165,7 +165,7 @@ function UserCard({ user, onEdit, onDelete, onViewCards }) {
           </div>
           <button
             onClick={() => onViewCards(user)}
-            className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+            className="text-sm text-blue-600 hover:text-blue-700 font-medium cursor-pointer"
           >
             Karten anzeigen →
           </button>

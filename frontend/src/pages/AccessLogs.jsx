@@ -2,11 +2,13 @@ import { format } from 'date-fns'
 import { de } from 'date-fns/locale'
 import { CheckCircle, Search, XCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { logsAPI } from '../services/api'
+import { cardsAPI, logsAPI, usersAPI } from '../services/api'
 
 function AccessLogs() {
   const [logs, setLogs] = useState([])
   const [filteredLogs, setFilteredLogs] = useState([])
+  const [users, setUsers] = useState([])
+  const [cards, setCards] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all') 
@@ -22,8 +24,14 @@ function AccessLogs() {
   const loadLogs = async () => {
     try {
       setLoading(true)
-      const response = await logsAPI.getAll()
-      setLogs(response.data)
+      const [logsResponse, usersResponse, cardsResponse] = await Promise.all([
+        logsAPI.getAll(),
+        usersAPI.getAll(),
+        cardsAPI.getAll(),
+      ])
+      setLogs(logsResponse.data)
+      setUsers(usersResponse.data)
+      setCards(cardsResponse.data)
     } catch (error) {
       console.error('Fehler beim Laden der Protokolle:', error)
     } finally {
@@ -36,10 +44,17 @@ function AccessLogs() {
 
     // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(log =>
-        log.card_uid.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (log.note && log.note.toLowerCase().includes(searchTerm.toLowerCase()))
-      )
+      filtered = filtered.filter(log => {
+        const card = cards.find(c => c.card_id === log.card_uid)
+        const user = card ? users.find(u => u.user_id === card.user_id) : null
+        const userName = user ? `${user.first_name} ${user.last_name}` : ''
+        
+        return (
+          log.card_uid.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (log.note && log.note.toLowerCase().includes(searchTerm.toLowerCase()))
+        )
+      })
     }
 
     // Filter by status
@@ -51,8 +66,6 @@ function AccessLogs() {
 
     setFilteredLogs(filtered)
   }
-
-
 
   if (loading) {
     return (
@@ -97,7 +110,7 @@ function AccessLogs() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Suche nach UID oder Notiz..."
+                placeholder="Suche nach Benutzer, UID oder Notiz..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="input-field pl-10"
@@ -128,6 +141,9 @@ function AccessLogs() {
                   Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Benutzer
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Karten-UID
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -141,39 +157,48 @@ function AccessLogs() {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredLogs.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan="5" className="px-6 py-12 text-center text-gray-500">
                     Keine Protokolle gefunden
                   </td>
                 </tr>
               ) : (
-                filteredLogs.map((log) => (
-                  <tr key={log.log_id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {log.access_granted ? (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                          <CheckCircle className="h-4 w-4 mr-1" />
-                          Gewährt
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                          <XCircle className="h-4 w-4 mr-1" />
-                          Verweigert
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <code className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">
-                        {log.card_uid}
-                      </code>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {format(new Date(log.access_time), 'dd.MM.yyyy HH:mm:ss', { locale: de })}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
-                      {log.note || '-'}
-                    </td>
-                  </tr>
-                ))
+                filteredLogs.map((log) => {
+                  const card = cards.find(c => c.card_id === log.card_uid)
+                  const user = card ? users.find(u => u.user_id === card.user_id) : null
+                  const userName = user ? `${user.first_name} ${user.last_name}` : 'Unbekannt'
+                  
+                  return (
+                    <tr key={log.log_id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {log.access_granted ? (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            <CheckCircle className="h-4 w-4 mr-1" />
+                            Gewährt
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            <XCircle className="h-4 w-4 mr-1" />
+                            Verweigert
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {userName}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <code className="text-sm font-mono bg-gray-100 px-2 py-1 rounded">
+                          {log.card_uid}
+                        </code>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {format(new Date(log.access_time), 'dd.MM.yyyy HH:mm:ss', { locale: de })}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {log.note || '-'}
+                      </td>
+                    </tr>
+                  )
+                })
               )}
             </tbody>
           </table>
