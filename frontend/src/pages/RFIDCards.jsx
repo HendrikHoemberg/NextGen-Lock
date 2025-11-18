@@ -1,19 +1,27 @@
 import { format } from 'date-fns'
 import { de } from 'date-fns/locale'
-import { Check, CreditCard as CreditCardIcon, Edit2, Plus, Trash2, User, X } from 'lucide-react'
+import { Check, CreditCard as CreditCardIcon, Edit2, Plus, Search, Trash2, User, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { cardsAPI, usersAPI } from '../services/api'
 
 function CardModal({ card, users, onClose, onSave }) {
   const [formData, setFormData] = useState({
-    uid: card?.uid || '',
+    card_id: card?.card_id || '',
     user_id: card?.user_id || '',
     authorized: card?.authorized ?? true,
   })
+  const [saving, setSaving] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    onSave(formData)
+    if (saving) return
+    setSaving(true)
+    try {
+      await onSave(formData)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -29,11 +37,11 @@ function CardModal({ card, users, onClose, onSave }) {
               <input
                 type="text"
                 required
-                value={formData.uid}
-                onChange={(e) => setFormData({ ...formData, uid: e.target.value })}
+                value={formData.card_id}
+                onChange={(e) => setFormData({ ...formData, card_id: e.target.value })}
                 className="input-field font-mono"
-                placeholder="A1:B2:C3:D4"
-                disabled={!!card}
+                placeholder="A1 B2 C3 D4"
+                disabled={!!card || saving}
               />
               {card && (
                 <p className="text-xs text-gray-500 mt-1">UID kann nicht geändert werden</p>
@@ -46,6 +54,7 @@ function CardModal({ card, users, onClose, onSave }) {
                 onChange={(e) => setFormData({ ...formData, user_id: e.target.value })}
                 className="input-field"
                 required
+                disabled={saving}
               >
                 <option value="">Benutzer auswählen...</option>
                 {users.map((user) => (
@@ -62,6 +71,7 @@ function CardModal({ card, users, onClose, onSave }) {
                 checked={formData.authorized}
                 onChange={(e) => setFormData({ ...formData, authorized: e.target.checked })}
                 className="h-4 w-4 text-blue-600 rounded"
+                disabled={saving}
               />
               <label htmlFor="authorized" className="text-sm font-medium text-gray-700">
                 Karte autorisieren
@@ -69,10 +79,17 @@ function CardModal({ card, users, onClose, onSave }) {
             </div>
           </div>
           <div className="flex gap-3 mt-6">
-            <button type="submit" className="btn-primary flex-1">
-              Speichern
+            <button type="submit" className="btn-primary flex-1" disabled={saving}>
+              {saving ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Speichern...
+                </span>
+              ) : (
+                'Speichern'
+              )}
             </button>
-            <button type="button" onClick={onClose} className="btn-secondary flex-1">
+            <button type="button" onClick={onClose} className="btn-secondary flex-1" disabled={saving}>
               Abbrechen
             </button>
           </div>
@@ -83,7 +100,28 @@ function CardModal({ card, users, onClose, onSave }) {
 }
 
 function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
+  const [processing, setProcessing] = useState(false)
   const user = users.find(u => u.user_id === card.user_id)
+
+  const handleToggleAuth = async () => {
+    if (processing) return
+    setProcessing(true)
+    try {
+      await onToggleAuth(card)
+    } finally {
+      setProcessing(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (processing) return
+    setProcessing(true)
+    try {
+      await onDelete(card.card_id)
+    } finally {
+      setProcessing(false)
+    }
+  }
 
   return (
     <div className={`card ${card.authorized ? 'border-l-4 border-green-500' : 'border-l-4 border-gray-300'}`}>
@@ -91,7 +129,7 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <code className="text-sm font-mono bg-gray-100 px-3 py-1 rounded font-semibold">
-              {card.uid}
+              {card.card_id}
             </code>
             {card.authorized ? (
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
@@ -120,29 +158,48 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
 
         <div className="flex gap-2">
           <button
-            onClick={() => onToggleAuth(card)}
+            onClick={handleToggleAuth}
+            disabled={processing}
             className={`p-2 rounded-lg transition-colors ${
+              processing ? 'opacity-50 cursor-not-allowed' : ''
+            } ${
               card.authorized
                 ? 'text-orange-600 hover:bg-orange-50'
                 : 'text-green-600 hover:bg-green-50'
             }`}
             title={card.authorized ? 'Autorisierung widerrufen' : 'Autorisieren'}
           >
-            {card.authorized ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
+            {processing ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
+            ) : card.authorized ? (
+              <X className="h-4 w-4" />
+            ) : (
+              <Check className="h-4 w-4" />
+            )}
           </button>
           <button
             onClick={() => onEdit(card)}
-            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            disabled={processing}
+            className={`p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors ${
+              processing ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             title="Bearbeiten"
           >
             <Edit2 className="h-4 w-4" />
           </button>
           <button
-            onClick={() => onDelete(card.card_id)}
-            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            onClick={handleDelete}
+            disabled={processing}
+            className={`p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors ${
+              processing ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             title="Löschen"
           >
-            <Trash2 className="h-4 w-4" />
+            {processing ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
+            ) : (
+              <Trash2 className="h-4 w-4" />
+            )}
           </button>
         </div>
       </div>
@@ -151,16 +208,29 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
 }
 
 function RFIDCards() {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [cards, setCards] = useState([])
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [editingCard, setEditingCard] = useState(null)
   const [filter, setFilter] = useState('all')
+  const [userFilter, setUserFilter] = useState('')
 
   useEffect(() => {
     loadData()
   }, [])
+
+  useEffect(() => {
+    // Check for user parameter in URL
+    const userId = searchParams.get('user')
+    if (userId && users.length > 0) {
+      const user = users.find(u => u.user_id === parseInt(userId))
+      if (user) {
+        setUserFilter(`${user.first_name} ${user.last_name}`)
+      }
+    }
+  }, [searchParams, users])
 
   const loadData = async () => {
     try {
@@ -179,19 +249,14 @@ function RFIDCards() {
   }
 
   const handleSaveCard = async (cardData) => {
-    try {
-      if (editingCard) {
-        await cardsAPI.update(editingCard.card_id, cardData)
-      } else {
-        await cardsAPI.create(cardData)
-      }
-      await loadData()
-      setShowModal(false)
-      setEditingCard(null)
-    } catch (error) {
-      console.error('Fehler beim Speichern:', error)
-      alert('Fehler beim Speichern der Karte')
+    if (editingCard) {
+      await cardsAPI.update(editingCard.card_id, cardData)
+    } else {
+      await cardsAPI.create(cardData)
     }
+    await loadData()
+    setShowModal(false)
+    setEditingCard(null)
   }
 
   const handleDeleteCard = async (cardId) => {
@@ -221,8 +286,18 @@ function RFIDCards() {
   }
 
   const filteredCards = cards.filter(card => {
-    if (filter === 'authorized') return card.authorized
-    if (filter === 'unauthorized') return !card.authorized
+    // Filter by authorization status
+    if (filter === 'authorized' && !card.authorized) return false
+    if (filter === 'unauthorized' && card.authorized) return false
+    
+    // Filter by user name
+    if (userFilter) {
+      const user = users.find(u => u.user_id === card.user_id)
+      if (!user) return false
+      const fullName = `${user.first_name} ${user.last_name}`.toLowerCase()
+      if (!fullName.includes(userFilter.toLowerCase())) return false
+    }
+    
     return true
   })
 
@@ -271,7 +346,32 @@ function RFIDCards() {
         </div>
       </div>
 
-      {/* Filter */}
+      {/* User Filter */}
+      <div className="card">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Nach Benutzer filtern..."
+            value={userFilter}
+            onChange={(e) => setUserFilter(e.target.value)}
+            className="input-field pl-10"
+          />
+          {userFilter && (
+            <button
+              onClick={() => {
+                setUserFilter('')
+                setSearchParams({})
+              }}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Status Filter */}
       <div className="card">
         <div className="flex gap-2">
           <button
@@ -333,7 +433,10 @@ function RFIDCards() {
               key={card.card_id}
               card={card}
               users={users}
-              onEdit={setEditingCard}
+              onEdit={(card) => {
+                setEditingCard(card)
+                setShowModal(true)
+              }}
               onDelete={handleDeleteCard}
               onToggleAuth={handleToggleAuth}
             />

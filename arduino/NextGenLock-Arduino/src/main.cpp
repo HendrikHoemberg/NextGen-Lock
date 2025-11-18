@@ -80,23 +80,55 @@ void loop()
     setStatusLED(IDLE);
     return;
   }
-  //Show UID on serial monitor
-  // digitalWrite(pinLED,HIGH);
-  Serial.print("USER ID tag :");
-  String content= "";
-  setStatusLED(RFID_DETECTED);
-  delay(2000);
- 
+  
+  // Build UID string
+  String content = "";
   for (byte i = 0; i < mfrc522.uid.size; i++) 
   {
-     Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
-     Serial.print(mfrc522.uid.uidByte[i], HEX);
      content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
      content.concat(String(mfrc522.uid.uidByte[i], HEX));
   }
-  setStatusLED(ACCESS_GRANTED);
-  digitalWrite (BUZZER, HIGH);
-  delay(2000);
-  digitalWrite (BUZZER, LOW);
-  Serial.println();
+  content.toUpperCase();
+  
+  // Send UID to backend via serial
+  Serial.print("USER ID tag :");
+  Serial.println(content);
+  
+  // Show blue LED while waiting for backend response
+  setStatusLED(RFID_DETECTED);
+  
+  // Wait for response from backend (max 5 seconds)
+  unsigned long startTime = millis();
+  String response = "";
+  
+  while (millis() - startTime < 5000) {
+    if (Serial.available() > 0) {
+      response = Serial.readStringUntil('\n');
+      response.trim();
+      break;
+    }
+    delay(50);
+  }
+  
+  // Process response
+  if (response == "GRANTED") {
+    // Access granted - green LED and 2 second continuous beep
+    setStatusLED(ACCESS_GRANTED);
+    digitalWrite(BUZZER, HIGH);
+    delay(2000);
+    digitalWrite(BUZZER, LOW);
+  } else {
+    // Access denied - red LED and 3 short beeps in 1.5 seconds
+    setStatusLED(ACCESS_DENIED);
+    for (int i = 0; i < 3; i++) {
+      digitalWrite(BUZZER, HIGH);
+      delay(250);  // 250ms beep
+      digitalWrite(BUZZER, LOW);
+      delay(250);  // 250ms pause (total 500ms per beep, 1.5s for 3 beeps)
+    }
+  }
+  
+  // Return to idle
+  delay(500);
+  setStatusLED(IDLE);
 } 

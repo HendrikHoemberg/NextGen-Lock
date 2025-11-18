@@ -21,13 +21,14 @@ export const usersAPI = {
 // RFID Cards API
 export const cardsAPI = {
   getAll: () => api.get('/cards'),
-  getById: (id) => api.get(`/cards/${id}`),
+  getById: (cardId) => api.get(`/cards/${cardId}`),
   getByUserId: (userId) => api.get(`/users/${userId}/cards`),
   create: (cardData) => api.post('/cards', cardData),
-  update: (id, cardData) => api.put(`/cards/${id}`, cardData),
-  delete: (id) => api.delete(`/cards/${id}`),
-  authorize: (id) => api.patch(`/cards/${id}/authorize`),
-  revoke: (id) => api.patch(`/cards/${id}/revoke`),
+  update: (cardId, cardData) => api.put(`/cards/${cardId}`, cardData),
+  delete: (cardId) => api.delete(`/cards/${cardId}`),
+  authorize: (cardId) => api.patch(`/cards/${cardId}/authorize`),
+  revoke: (cardId) => api.patch(`/cards/${cardId}/revoke`),
+  verify: (cardId) => api.get(`/cards/${cardId}/verify`),
 }
 
 // Access Logs API

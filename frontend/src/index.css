@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -15,30 +13,86 @@ body {
 
 @layer components {
   .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors;
+    background-color: rgb(37, 99, 235);
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition-property: background-color;
+    transition-duration: 150ms;
+  }
+  
+  .btn-primary:hover {
+    background-color: rgb(29, 78, 216);
   }
   
   .btn-secondary {
-    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg transition-colors;
+    background-color: rgb(229, 231, 235);
+    color: rgb(31, 41, 55);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition-property: background-color;
+    transition-duration: 150ms;
+  }
+  
+  .btn-secondary:hover {
+    background-color: rgb(209, 213, 219);
   }
   
   .btn-success {
-    @apply bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors;
+    background-color: rgb(22, 163, 74);
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition-property: background-color;
+    transition-duration: 150ms;
+  }
+  
+  .btn-success:hover {
+    background-color: rgb(20, 83, 45);
   }
   
   .btn-danger {
-    @apply bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors;
+    background-color: rgb(220, 38, 38);
+    color: white;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    transition-property: background-color;
+    transition-duration: 150ms;
+  }
+  
+  .btn-danger:hover {
+    background-color: rgb(185, 28, 28);
   }
   
   .card {
-    @apply bg-white rounded-lg shadow-md p-6;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    padding: 1.5rem;
   }
   
   .input-field {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgb(209, 213, 219);
+    border-radius: 0.5rem;
+  }
+  
+  .input-field:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 0 0 1px rgb(59, 130, 246);
+    border-color: rgb(59, 130, 246);
   }
   
   .label {
-    @apply block text-sm font-medium text-gray-700 mb-1;
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgb(55, 65, 81);
+    margin-bottom: 0.25rem;
   }
 }

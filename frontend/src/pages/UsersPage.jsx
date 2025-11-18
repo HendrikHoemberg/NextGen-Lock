@@ -9,10 +9,17 @@ function UserModal({ user, onClose, onSave }) {
     first_name: user?.first_name || '',
     last_name: user?.last_name || '',
   })
+  const [saving, setSaving] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    onSave(formData)
+    if (saving) return
+    setSaving(true)
+    try {
+      await onSave(formData)
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -32,6 +39,7 @@ function UserModal({ user, onClose, onSave }) {
                 onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
                 className="input-field"
                 placeholder="Max"
+                disabled={saving}
               />
             </div>
             <div>
@@ -43,14 +51,22 @@ function UserModal({ user, onClose, onSave }) {
                 onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
                 className="input-field"
                 placeholder="Mustermann"
+                disabled={saving}
               />
             </div>
           </div>
           <div className="flex gap-3 mt-6">
-            <button type="submit" className="btn-primary flex-1">
-              Speichern
+            <button type="submit" className="btn-primary flex-1" disabled={saving}>
+              {saving ? (
+                <span className="flex items-center justify-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  Speichern...
+                </span>
+              ) : (
+                'Speichern'
+              )}
             </button>
-            <button type="button" onClick={onClose} className="btn-secondary flex-1">
+            <button type="button" onClick={onClose} className="btn-secondary flex-1" disabled={saving}>
               Abbrechen
             </button>
           </div>
@@ -63,6 +79,7 @@ function UserModal({ user, onClose, onSave }) {
 function UserCard({ user, onEdit, onDelete, onViewCards }) {
   const [cards, setCards] = useState([])
   const [loading, setLoading] = useState(true)
+  const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
     loadUserCards()
@@ -81,6 +98,16 @@ function UserCard({ user, onEdit, onDelete, onViewCards }) {
 
   const authorizedCount = cards.filter(card => card.authorized).length
 
+  const handleDelete = async () => {
+    if (processing) return
+    setProcessing(true)
+    try {
+      await onDelete(user.user_id)
+    } finally {
+      setProcessing(false)
+    }
+  }
+
   return (
     <div className="card hover:shadow-lg transition-shadow">
       <div className="flex items-start justify-between mb-4">
@@ -98,17 +125,27 @@ function UserCard({ user, onEdit, onDelete, onViewCards }) {
         <div className="flex gap-2">
           <button
             onClick={() => onEdit(user)}
-            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+            disabled={processing}
+            className={`p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors ${
+              processing ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             title="Bearbeiten"
           >
             <Edit2 className="h-4 w-4" />
           </button>
           <button
-            onClick={() => onDelete(user.user_id)}
-            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            onClick={handleDelete}
+            disabled={processing}
+            className={`p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors ${
+              processing ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             title="Löschen"
           >
-            <Trash2 className="h-4 w-4" />
+            {processing ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
+            ) : (
+              <Trash2 className="h-4 w-4" />
+            )}
           </button>
         </div>
       </div>
@@ -161,19 +198,14 @@ function UsersPage() {
   }
 
   const handleSaveUser = async (userData) => {
-    try {
-      if (editingUser) {
-        await usersAPI.update(editingUser.user_id, userData)
-      } else {
-        await usersAPI.create(userData)
-      }
-      await loadUsers()
-      setShowModal(false)
-      setEditingUser(null)
-    } catch (error) {
-      console.error('Fehler beim Speichern:', error)
-      alert('Fehler beim Speichern des Benutzers')
+    if (editingUser) {
+      await usersAPI.update(editingUser.user_id, userData)
+    } else {
+      await usersAPI.create(userData)
     }
+    await loadUsers()
+    setShowModal(false)
+    setEditingUser(null)
   }
 
   const handleDeleteUser = async (userId) => {

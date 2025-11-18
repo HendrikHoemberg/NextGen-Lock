@@ -1,0 +1,22 @@
+{
+  "name": "nextgen-lock-backend",
+  "version": "1.0.0",
+  "description": "Backend for NextGen Lock RFID Access System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": ["rfid", "access-control", "express"],
+  "author": "Die Grimmigen",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "better-sqlite3": "^11.0.0",
+    "serialport": "^12.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
