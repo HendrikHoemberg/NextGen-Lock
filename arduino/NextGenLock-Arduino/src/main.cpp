@@ -95,7 +95,12 @@ void loop()
   Serial.println(content);
   
   // Show blue LED while waiting for backend response
-  setStatusLED(RFID_DETECTED);
+  for (int i = 0; i < 3; i++) {
+      setStatusLED(RFID_DETECTED);
+      delay(250); 
+      setStatusLED(IDLE);
+      delay(250);  
+  }
   
   // Wait for response from backend (max 5 seconds)
   unsigned long startTime = millis();
