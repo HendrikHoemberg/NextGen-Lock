@@ -11,7 +11,8 @@ import UsersPage from './pages/UsersPage'
 
 function Navigation() {
   const location = useLocation()
-  const { isDarkMode, toggleDarkMode } = useDarkMode()
+  const { isDarkMode, toggleDarkMode, syncWithSystem } = useDarkMode()
+  const [showMenu, setShowMenu] = useState(false)
   
   const navItems = [
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -19,6 +20,11 @@ function Navigation() {
     { path: '/users', icon: Users, label: 'Benutzer' },
     { path: '/cards', icon: CreditCard, label: 'RFID-Karten' },
   ]
+
+  const handleSyncWithSystem = () => {
+    syncWithSystem()
+    setShowMenu(false)
+  }
 
   return (
     <nav className="bg-white dark:bg-gray-800 shadow-lg transition-colors duration-200">
@@ -51,13 +57,33 @@ function Navigation() {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-              aria-label="Toggle Dark Mode"
-            >
-              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowMenu(!showMenu)}
+                className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                aria-label="Toggle Dark Mode"
+                title="Theme settings"
+              >
+                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+              
+              {showMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg z-50">
+                  <button
+                    onClick={toggleDarkMode}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-t-lg transition-colors"
+                  >
+                    {isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                  </button>
+                  <button
+                    onClick={handleSyncWithSystem}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-b-lg border-t border-gray-200 dark:border-gray-600 transition-colors"
+                  >
+                    Sync with System
+                  </button>
+                </div>
+              )}
+            </div>
             <span className="text-sm text-gray-600 dark:text-gray-300">Die Grimmigen</span>
           </div>
         </div>
