@@ -23,4 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 
-nextgenlock.db
+db/nextgenlock.db
