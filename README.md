@@ -159,7 +159,7 @@ Die API-Services sind in `frontend/src/services/api.js` strukturiert mit drei Ha
 - `created_at` - TEXT (datetime) DEFAULT now()
 
 ### RFID Cards (RFID-Karten)
-- `card_id` - TEXT PRIMARY KEY (z.B. " A1 B2 C3 D4")
+- `card_uid` - TEXT PRIMARY KEY (z.B. " A1 B2 C3 D4")
 - `user_id` - INTEGER (Foreign Key → user.user_id, ON DELETE SET NULL)
 - `authorized` - INTEGER (0/1) DEFAULT 0
 - `added_on` - TEXT (datetime) DEFAULT now()
