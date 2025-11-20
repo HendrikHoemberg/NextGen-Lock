@@ -8,7 +8,7 @@ import { cardsAPI, usersAPI } from '../services/api'
 
 function CardModal({ card, users, onClose, onSave }) {
   const [formData, setFormData] = useState({
-    card_id: card?.card_id || '',
+    card_uid: card?.card_uid || '',
     user_id: card?.user_id || '',
     authorized: card?.authorized ?? true,
   })
@@ -38,8 +38,8 @@ function CardModal({ card, users, onClose, onSave }) {
               <input
                 type="text"
                 required
-                value={formData.card_id}
-                onChange={(e) => setFormData({ ...formData, card_id: e.target.value })}
+                value={formData.card_uid}
+                onChange={(e) => setFormData({ ...formData, card_uid: e.target.value })}
                 className="input-field font-mono"
                 placeholder="A1 B2 C3 D4"
                 disabled={!!card || saving}
@@ -118,7 +118,7 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
     if (processing) return
     setProcessing(true)
     try {
-      await onDelete(card.card_id)
+      await onDelete(card.card_uid)
     } finally {
       setProcessing(false)
     }
@@ -130,7 +130,7 @@ function CardItem({ card, users, onEdit, onDelete, onToggleAuth }) {
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
             <code className="text-sm font-mono bg-gray-100 dark:bg-gray-700 dark:text-gray-200 px-3 py-1 rounded font-semibold">
-              {card.card_id}
+              {card.card_uid}
             </code>
             {card.authorized ? (
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
@@ -253,7 +253,7 @@ function RFIDCards() {
 
   const handleSaveCard = async (cardData) => {
     if (editingCard) {
-      await cardsAPI.update(editingCard.card_id, cardData)
+      await cardsAPI.update(editingCard.card_uid, cardData)
     } else {
       await cardsAPI.create(cardData)
     }
@@ -282,9 +282,9 @@ function RFIDCards() {
   const handleToggleAuth = async (card) => {
     try {
       if (card.authorized) {
-        await cardsAPI.revoke(card.card_id)
+        await cardsAPI.revoke(card.card_uid)
       } else {
-        await cardsAPI.authorize(card.card_id)
+        await cardsAPI.authorize(card.card_uid)
       }
       await loadData()
     } catch (error) {
@@ -305,7 +305,7 @@ function RFIDCards() {
     // Filter by user name or card UID
     if (userFilter) {
       const searchTerm = userFilter.toLowerCase()
-      const cardUid = card.card_id.toLowerCase()
+      const cardUid = card.card_uid.toLowerCase()
       const user = users.find(u => u.user_id === card.user_id)
       const fullName = user ? `${user.first_name} ${user.last_name}`.toLowerCase() : ''
       
@@ -333,7 +333,7 @@ function RFIDCards() {
   if (userFilter) {
     const searchTerm = userFilter.toLowerCase()
     baseCards = baseCards.filter(card => {
-      const cardUid = card.card_id.toLowerCase()
+      const cardUid = card.card_uid.toLowerCase()
       const user = users.find(u => u.user_id === card.user_id)
       const fullName = user ? `${user.first_name} ${user.last_name}`.toLowerCase() : ''
       return cardUid.includes(searchTerm) || fullName.includes(searchTerm)
@@ -483,7 +483,7 @@ function RFIDCards() {
         <div className="space-y-4">
           {filteredCards.map((card) => (
             <CardItem
-              key={card.card_id}
+              key={card.card_uid}
               card={card}
               users={users}
               onEdit={(card) => {

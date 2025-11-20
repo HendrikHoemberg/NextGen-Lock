@@ -71,7 +71,7 @@ function handleArduinoData(data) {
     
     try {
       // Check if card is authorized
-      const card = db.prepare('SELECT card_id, user_id, authorized FROM rfid_card WHERE card_id = ?').get(uid);
+      const card = db.prepare('SELECT f, user_id, authorized FROM rfid_card WHERE card_uid = ?').get(uid);
       
       let accessGranted = false;
       let note = '';
@@ -195,7 +195,7 @@ app.get('/api/cards/:cardId', (request, response) => {
     const card = db.prepare(`SELECT c.*, u.first_name, u.last_name 
      FROM rfid_card c 
      LEFT JOIN user u ON c.user_id = u.user_id 
-     WHERE c.card_id = ?`).get(request.params.cardId);
+     WHERE c.card_uid = ?`).get(request.params.cardId);
     if (!card) {
       response.status(404).json({ error: 'Card not found' });
       return;
@@ -218,16 +218,16 @@ app.get('/api/users/:userId/cards', (request, response) => {
 
 // POST create card
 app.post('/api/cards', (request, response) => {
-  const { card_id, user_id, authorized } = request.body;
+  const { card_uid, user_id, authorized } = request.body;
   
-  if (!card_id) {
-    response.status(400).json({ error: 'card_id is required' });
+  if (!card_uid) {
+    response.status(400).json({ error: 'card_uid is required' });
     return;
   }
   
   try {
-    db.prepare('INSERT INTO rfid_card (card_id, user_id, authorized) VALUES (?, ?, ?)').run(card_id, user_id || null, authorized ? 1 : 0);
-    response.status(201).json({ card_id, user_id, authorized });
+    db.prepare('INSERT INTO rfid_card (card_uid, user_id, authorized) VALUES (?, ?, ?)').run(card_uid, user_id || null, authorized ? 1 : 0);
+    response.status(201).json({ card_uid, user_id, authorized });
   } catch (error) {
     response.status(500).json({ error: error.message });
   }
@@ -238,12 +238,12 @@ app.put('/api/cards/:cardId', (request, response) => {
   const { user_id, authorized } = request.body;
   
   try {
-    const result = db.prepare('UPDATE rfid_card SET user_id = ?, authorized = ? WHERE card_id = ?').run(user_id || null, authorized ? 1 : 0, request.params.cardId);
+    const result = db.prepare('UPDATE rfid_card SET user_id = ?, authorized = ? WHERE card_uid = ?').run(user_id || null, authorized ? 1 : 0, request.params.cardId);
     if (result.changes === 0) {
       response.status(404).json({ error: 'Card not found' });
       return;
     }
-    response.json({ card_id: request.params.cardId, user_id, authorized });
+    response.json({ card_uid: request.params.cardId, user_id, authorized });
   } catch (error) {
     response.status(500).json({ error: error.message });
   }
@@ -252,7 +252,7 @@ app.put('/api/cards/:cardId', (request, response) => {
 // DELETE card
 app.delete('/api/cards/:cardId', (request, response) => {
   try {
-    const result = db.prepare('DELETE FROM rfid_card WHERE card_id = ?').run(request.params.cardId);
+    const result = db.prepare('DELETE FROM rfid_card WHERE card_uid = ?').run(request.params.cardId);
     if (result.changes === 0) {
       response.status(404).json({ error: 'Card not found' });
       return;
@@ -266,7 +266,7 @@ app.delete('/api/cards/:cardId', (request, response) => {
 // PATCH authorize card
 app.patch('/api/cards/:cardId/authorize', (request, response) => {
   try {
-    const result = db.prepare('UPDATE rfid_card SET authorized = 1 WHERE card_id = ?').run(request.params.cardId);
+    const result = db.prepare('UPDATE rfid_card SET authorized = 1 WHERE card_uid = ?').run(request.params.cardId);
     if (result.changes === 0) {
       response.status(404).json({ error: 'Card not found' });
       return;
@@ -280,7 +280,7 @@ app.patch('/api/cards/:cardId/authorize', (request, response) => {
 // PATCH revoke card authorization
 app.patch('/api/cards/:cardId/revoke', (request, response) => {
   try {
-    const result = db.prepare('UPDATE rfid_card SET authorized = 0 WHERE card_id = ?').run(request.params.cardId);
+    const result = db.prepare('UPDATE rfid_card SET authorized = 0 WHERE card_uid = ?').run(request.params.cardId);
     if (result.changes === 0) {
       response.status(404).json({ error: 'Card not found' });
       return;
@@ -294,14 +294,14 @@ app.patch('/api/cards/:cardId/revoke', (request, response) => {
 // GET verify card (for manual testing)
 app.get('/api/cards/:cardId/verify', (request, response) => {
   try {
-    const card = db.prepare('SELECT card_id, user_id, authorized FROM rfid_card WHERE card_id = ?').get(request.params.cardId);
+    const card = db.prepare('SELECT card_uid, user_id, authorized FROM rfid_card WHERE card_uid = ?').get(request.params.cardId);
     if (!card) {
       response.json({ authorized: false, message: 'Card not registered' });
       return;
     }
     response.json({ 
       authorized: card.authorized === 1, 
-      card_id: card.card_id,
+      card_uid: card.card_uid,
       user_id: card.user_id 
     });
   } catch (error) {
