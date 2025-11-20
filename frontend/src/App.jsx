@@ -1,6 +1,8 @@
 import { CreditCard, LayoutDashboard, Lock, Moon, Sun, Users } from 'lucide-react'
+import { useState } from 'react'
 import { Link, Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom'
 import './App.css'
+import Splashscreen from './components/Splashscreen'
 import useDarkMode from './hooks/useDarkMode'
 import AccessLogs from './pages/AccessLogs'
 import Dashboard from './pages/Dashboard'
@@ -65,6 +67,12 @@ function Navigation() {
 }
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true)
+
+  if (showSplash) {
+    return <Splashscreen onFinish={() => setShowSplash(false)} />
+  }
+
   return (
     <Router>
       <div className="min-h-screen bg-gray-200 dark:bg-gray-900 transition-colors duration-200">
