@@ -172,6 +172,9 @@ app.put('/api/users/:id', (request, response) => {
 // DELETE user
 app.delete('/api/users/:id', (request, response) => {
   try {
+    // Set all cards linked to this user as unauthorized
+    db.prepare('UPDATE rfid_card SET authorized = 0 WHERE user_id = ?').run(request.params.id);
+    
     const result = db.prepare('DELETE FROM user WHERE user_id = ?').run(request.params.id);
     if (result.changes === 0) {
       response.status(404).json({ error: 'User not found' });
