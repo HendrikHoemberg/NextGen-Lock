@@ -2,13 +2,11 @@ import { format } from 'date-fns'
 import { de } from 'date-fns/locale'
 import { CheckCircle, Search, XCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { cardsAPI, logsAPI, usersAPI } from '../services/api'
+import { logsAPI } from '../services/api'
 
 function AccessLogs() {
   const [logs, setLogs] = useState([])
   const [filteredLogs, setFilteredLogs] = useState([])
-  const [users, setUsers] = useState([])
-  const [cards, setCards] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('all') 
@@ -24,14 +22,9 @@ function AccessLogs() {
   const loadLogs = async () => {
     try {
       setLoading(true)
-      const [logsResponse, usersResponse, cardsResponse] = await Promise.all([
-        logsAPI.getAll(),
-        usersAPI.getAll(),
-        cardsAPI.getAll(),
-      ])
+      // Logs now include user information from the backend
+      const logsResponse = await logsAPI.getAll()
       setLogs(logsResponse.data)
-      setUsers(usersResponse.data)
-      setCards(cardsResponse.data)
     } catch (error) {
       console.error('Fehler beim Laden der Protokolle:', error)
     } finally {
@@ -45,9 +38,9 @@ function AccessLogs() {
     // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(log => {
-        const card = cards.find(c => c.card_id === log.card_uid)
-        const user = card ? users.find(u => u.user_id === card.user_id) : null
-        const userName = user ? `${user.first_name} ${user.last_name}` : ''
+        const userName = log.first_name && log.last_name 
+          ? `${log.first_name} ${log.last_name}` 
+          : ''
         
         return (
           log.card_uid.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -163,9 +156,9 @@ function AccessLogs() {
                 </tr>
               ) : (
                 filteredLogs.map((log) => {
-                  const card = cards.find(c => c.card_id === log.card_uid)
-                  const user = card ? users.find(u => u.user_id === card.user_id) : null
-                  const userName = user ? `${user.first_name} ${user.last_name}` : 'Unbekannt'
+                  const userName = log.first_name && log.last_name 
+                    ? `${log.first_name} ${log.last_name}` 
+                    : 'Unbekannter Benutzer'
                   
                   return (
                     <tr key={log.log_id} className="hover:bg-gray-50 dark:hover:bg-gray-700">

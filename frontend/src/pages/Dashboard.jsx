@@ -22,6 +22,9 @@ function StatCard({ title, value, icon: Icon, color }) {
 
 function RecentAccessLog({ log }) {
   const isGranted = log.access_granted
+  const userName = log.first_name && log.last_name 
+    ? `${log.first_name} ${log.last_name}` 
+    : 'Unbekannter Benutzer'
   
   return (
     <div className={`p-4 border-l-4 ${isGranted ? 'border-green-500 bg-green-50 dark:bg-green-900/20' : 'border-red-500 bg-red-50 dark:bg-red-900/20'} rounded-r-lg mb-3`}>
@@ -36,7 +39,8 @@ function RecentAccessLog({ log }) {
             <p className="font-medium text-gray-900 dark:text-white">
               {isGranted ? 'Zugriff gewährt' : 'Zugriff verweigert'}
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">UID: {log.card_uid}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Benutzer: {userName}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-500">Karte: {log.card_uid}</p>
             {log.note && <p className="text-sm text-gray-500 dark:text-gray-400 italic">{log.note}</p>}
           </div>
         </div>
@@ -63,6 +67,21 @@ function Dashboard() {
 
   useEffect(() => {
     loadDashboardData()
+    
+    // Poll for new logs every 2 seconds
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await logsAPI.getRecent(5)
+        setRecentLogs(response.data)
+      } catch (error) {
+        console.error('Error polling for logs:', error)
+      }
+    }, 2000)
+    
+    // Cleanup on unmount
+    return () => {
+      clearInterval(pollInterval)
+    }
   }, [])
 
   const loadDashboardData = async () => {

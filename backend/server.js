@@ -9,7 +9,7 @@ const app = express();
 const PORT = 5000;
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:3000' })); 
+app.use(cors()); 
 app.use(express.json());
 
 // Database connection
@@ -71,22 +71,31 @@ function handleArduinoData(data) {
     
     try {
       // Check if card is authorized
-      const card = db.prepare('SELECT f, user_id, authorized FROM rfid_card WHERE card_uid = ?').get(uid);
+      const card = db.prepare('SELECT card_uid, user_id, authorized FROM rfid_card WHERE card_uid = ?').get(uid);
       
       let accessGranted = false;
       let note = '';
       
       if (!card) {
-        note = 'Card not registered';
+        note = 'Karte nicht registriert';
       } else if (card.authorized === 0) {
-        note = 'Card not authorized';
+        note = 'Karte nicht autorisiert';
       } else {
         accessGranted = true;
-        note = 'Access granted';
+        note = 'Zugriff gewährt';
       }
       
       // Log the access attempt
-      db.prepare('INSERT INTO access_log (card_uid, access_granted, note) VALUES (?, ?, ?)').run(uid, accessGranted ? 1 : 0, note);
+      const result = db.prepare('INSERT INTO access_log (card_uid, access_granted, note) VALUES (?, ?, ?)').run(uid, accessGranted ? 1 : 0, note);
+      
+      // Get the newly created log with user information
+      const newLog = db.prepare(`
+        SELECT al.*, u.first_name, u.last_name 
+        FROM access_log al
+        LEFT JOIN rfid_card rc ON al.card_uid = rc.card_uid
+        LEFT JOIN user u ON rc.user_id = u.user_id
+        WHERE al.log_id = ?
+      `).get(result.lastInsertRowid);
       
       // Send response back to Arduino
       if (serialPort && serialPort.isOpen) {
@@ -316,15 +325,21 @@ app.get('/api/logs', (request, response) => {
   const { access_granted, limit, offset } = request.query;
   
   try {
-    let query = 'SELECT * FROM access_log WHERE 1=1';
+    let query = `
+      SELECT al.*, u.first_name, u.last_name 
+      FROM access_log al
+      LEFT JOIN rfid_card rc ON al.card_uid = rc.card_uid
+      LEFT JOIN user u ON rc.user_id = u.user_id
+      WHERE 1=1
+    `;
     const params = [];
     
     if (access_granted !== undefined) {
-      query += ' AND access_granted = ?';
+      query += ' AND al.access_granted = ?';
       params.push(access_granted);
     }
     
-    query += ' ORDER BY access_time DESC';
+    query += ' ORDER BY al.access_time DESC';
     
     if (limit) {
       query += ' LIMIT ?';
@@ -348,7 +363,14 @@ app.get('/api/logs/recent', (request, response) => {
   const limit = request.query.limit || 10;
   
   try {
-    const logs = db.prepare('SELECT * FROM access_log ORDER BY access_time DESC LIMIT ?').all(parseInt(limit));
+    const logs = db.prepare(`
+      SELECT al.*, u.first_name, u.last_name 
+      FROM access_log al
+      LEFT JOIN rfid_card rc ON al.card_uid = rc.card_uid
+      LEFT JOIN user u ON rc.user_id = u.user_id
+      ORDER BY al.access_time DESC 
+      LIMIT ?
+    `).all(parseInt(limit));
     response.json(logs);
   } catch (error) {
     response.status(500).json({ error: error.message });
