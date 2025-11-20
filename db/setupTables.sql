@@ -8,7 +8,7 @@ CREATE TABLE user (
 );
 
 CREATE TABLE rfid_card (
-    card_id     TEXT PRIMARY KEY,
+    card_uid     TEXT PRIMARY KEY,
     user_id     INTEGER,
     authorized  INTEGER NOT NULL DEFAULT 0,  
     added_on    TEXT NOT NULL DEFAULT (datetime('now')),

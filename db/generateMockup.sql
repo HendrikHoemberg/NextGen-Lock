@@ -12,7 +12,7 @@ INSERT INTO user (first_name, last_name, created_at) VALUES
 ('Emma', 'Hoffmann', datetime('now','-7 days')),
 ('Max', 'Bauer', datetime('now','-5 days'));
 
-INSERT INTO rfid_card (card_id, user_id, authorized, added_on) VALUES
+INSERT INTO rfid_card (card_uid, user_id, authorized, added_on) VALUES
 ('04A3B21C', 1, 1, datetime('now','-29 days')),
 ('09FF11AA', 1, 1, datetime('now','-29 days')),
 ('8812CC09', 2, 1, datetime('now','-27 days')),
