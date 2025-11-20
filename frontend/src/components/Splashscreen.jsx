@@ -23,7 +23,9 @@ function Splashscreen({ onFinish }) {
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black"
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black ${
+        fadeOut ? 'splashscreen-bg-fade-out' : ''
+      }`}
     >
       <img 
         src="/images/splashscreen.svg" 

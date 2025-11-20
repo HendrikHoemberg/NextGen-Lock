@@ -69,24 +69,23 @@ function Navigation() {
 function App() {
   const [showSplash, setShowSplash] = useState(true)
 
-  if (showSplash) {
-    return <Splashscreen onFinish={() => setShowSplash(false)} />
-  }
-
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-200 dark:bg-gray-900 transition-colors duration-200">
-        <Navigation />
-        <main className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/logs" element={<AccessLogs />} />
-            <Route path="/users" element={<UsersPage />} />
-            <Route path="/cards" element={<RFIDCards />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <>
+      {showSplash && <Splashscreen onFinish={() => setShowSplash(false)} />}
+      <Router>
+        <div className="min-h-screen bg-gray-200 dark:bg-gray-900 transition-colors duration-200">
+          <Navigation />
+          <main className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/logs" element={<AccessLogs />} />
+              <Route path="/users" element={<UsersPage />} />
+              <Route path="/cards" element={<RFIDCards />} />
+            </Routes>
+          </main>
+        </div>
+      </Router>
+    </>
   )
 }
 
