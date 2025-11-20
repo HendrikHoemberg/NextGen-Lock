@@ -6,7 +6,7 @@ Full-stack RFID access control system with Arduino hardware integration, React f
 - Julian Naumann
 - Hendrik Hömberg
 
-## Technologie-Stack
+## Technology Stack
 
 ### Frontend
 - **React 19** - UI Framework
@@ -14,7 +14,7 @@ Full-stack RFID access control system with Arduino hardware integration, React f
 - **Tailwind CSS 4** - Styling with PostCSS
 - **React Router DOM 7** - Navigation
 - **Axios** - HTTP Client
-- **date-fns 4** - Datum-Formatierung
+- **date-fns 4** - Date Formatting
 - **Lucide React** - Icons
 
 ### Backend
@@ -30,6 +30,19 @@ Full-stack RFID access control system with Arduino hardware integration, React f
 - **Buzzer** - Audio Feedback
 
 ## Installation & Setup
+
+### Prerequisites
+
+Before installing NextGen Lock, ensure you have **Node.js** installed on your system:
+- **Node.js 16 or higher** is required for the backend
+- **Node.js 18 or higher** is recommended for the frontend
+- Download from [nodejs.org](https://nodejs.org/) or use your system's package manager
+
+Verify your installation by running:
+```bash
+node --version
+npm --version
+```
 
 ### Quick Start (All Platforms)
 
@@ -79,58 +92,58 @@ cd db
 node resetDb.js
 ```
 
-## Funktionen
+## Features
 
 ### 1. Dashboard (`/`)
-- Übersicht über alle wichtigen Statistiken
-- Anzahl Benutzer und RFID-Karten
-- Letzte 5 Zugangsversuche mit Status
-- Echtzeit-Updates
+- Overview of all important statistics
+- Number of users and RFID cards
+- Last 5 access attempts with status
+- Real-time updates
 
-### 2. Zugriffsprotokolle (`/logs`)
-- Vollständige Liste aller Zugangsversuche
-- Filter nach Status (gewährt/verweigert)
-- Suchfunktion nach UID oder Notiz
-- Zeitstempel und detaillierte Informationen
+### 2. Access Logs (`/logs`)
+- Complete list of all access attempts
+- Filter by status (granted/denied)
+- Search function by UID or note
+- Timestamps and detailed information
 
-### 3. Benutzer-Verwaltung (`/users`)
-- Benutzer anlegen, bearbeiten, löschen
-- Übersicht der zugeordneten RFID-Karten
-- Direkte Navigation zu Benutzer-Karten
-- Loading States und Duplikat-Schutz
-- Confirm Modal zur Sicherheit bei Löschvorgängen
+### 3. User Management (`/users`)
+- Create, edit, delete users
+- Overview of assigned RFID cards
+- Direct navigation to user cards
+- Loading states and duplicate protection
+- Confirm modal for security on delete operations
 
-### 4. RFID-Karten-Verwaltung (`/cards`)
-- Karten anlegen und verwalten
-- Autorisierung erteilen/widerrufen mit Echtzeit-Feedback
-- Zuordnung zu Benutzern
-- Filter nach Autorisierungsstatus
-- Benutzer-Name Suchfilter
-- URL-basierte Filterung (`/cards?user=123`)
-- Loading States für alle Aktionen
-- Confirm Modal zur Sicherheit bei Löschvorgängen
+### 4. RFID Card Management (`/cards`)
+- Create and manage cards
+- Grant/revoke authorization with real-time feedback
+- Assignment to users
+- Filter by authorization status
+- User name search filter
+- URL-based filtering (`/cards?user=123`)
+- Loading states for all actions
+- Confirm modal for security on delete operations
 
 ### 5. Arduino Integration
-- Automatische Erkennung des Arduino über SerialPort
-- RFID-Karte scannen → Backend prüft Autorisierung
-- **Blaue LED** - Warten auf Backend-Antwort
-- **Grüne LED + 2s Dauerton** - Zugang gewährt
-- **Rote LED + 3x kurze Pieptöne (je 250ms)** - Zugang verweigert
-- Automatisches Logging aller Zugriffsversuche
+- Automatic Arduino detection via SerialPort
+- RFID card scan → Backend checks authorization
+- **Blue LED** - Waiting for backend response
+- **Green LED + 2s continuous tone** - Access granted
+- **Red LED + 3x short beeps (250ms each)** - Access denied
+- Automatic logging of all access attempts
 
-## System-Architektur
+## System Architecture
 
-### Datenfluss bei RFID-Scan:
-1. Arduino liest RFID-Karte
-2. Sendet UID via Serial an Backend
-3. Backend prüft in Datenbank ob Karte autorisiert
-4. Speichert Zugriffsversuch in access_log
-5. Sendet `GRANTED` oder `DENIED` zurück an Arduino
-6. Arduino zeigt entsprechende LED/Buzzer-Kombination
+### Data Flow on RFID Scan:
+1. Arduino reads RFID card
+2. Sends UID via serial to backend
+3. Backend checks database if card is authorized
+4. Stores access attempt in access_log
+5. Sends `GRANTED` or `DENIED` back to Arduino
+6. Arduino displays corresponding LED/buzzer combination
 
-### API-Konfiguration
+### API Configuration
 
-Das Frontend kommuniziert über Vite Proxy mit dem Backend:
+The frontend communicates with the backend via Vite proxy:
 
 ```javascript
 // vite.config.js
@@ -145,82 +158,82 @@ server: {
 }
 ```
 
-Die API-Services sind in `frontend/src/services/api.js` strukturiert mit drei Hauptmodulen:
-- `usersAPI` - Benutzerverwaltung
-- `cardsAPI` - RFID-Kartenverwaltung
-- `logsAPI` - Zugriffsprotokolle
+API services are structured in `frontend/src/services/api.js` with three main modules:
+- `usersAPI` - User management
+- `cardsAPI` - RFID card management
+- `logsAPI` - Access logs
 
-## Datenmodell (SQLite)
+## Data Model (SQLite)
 
-### Users (Benutzer)
+### Users
 - `user_id` - INTEGER PRIMARY KEY AUTOINCREMENT
 - `first_name` - TEXT NOT NULL
 - `last_name` - TEXT NOT NULL
 - `created_at` - TEXT (datetime) DEFAULT now()
 
-### RFID Cards (RFID-Karten)
-- `card_uid` - TEXT PRIMARY KEY (z.B. " A1 B2 C3 D4")
+### RFID Cards
+- `card_uid` - TEXT PRIMARY KEY (e.g., "A1 B2 C3 D4")
 - `user_id` - INTEGER (Foreign Key → user.user_id, ON DELETE SET NULL)
 - `authorized` - INTEGER (0/1) DEFAULT 0
 - `added_on` - TEXT (datetime) DEFAULT now()
 
-### Access Logs (Zugriffsprotokolle)
+### Access Logs
 - `log_id` - INTEGER PRIMARY KEY AUTOINCREMENT
 - `card_uid` - TEXT NOT NULL
 - `access_time` - TEXT (datetime) DEFAULT now()
 - `access_granted` - INTEGER (0/1) NOT NULL
-- `note` - TEXT (z.B. "Card not registered", "Access granted")
+- `note` - TEXT (e.g., "Card not registered", "Access granted")
 
-**Hinweis:** PRAGMA foreign_keys = ON ist aktiviert
+**Note:** PRAGMA foreign_keys = ON is enabled
 
 ## Backend API Endpoints
 
 ### Users
-- `GET /api/users` - Alle Benutzer (ORDER BY created_at DESC)
-- `GET /api/users/:id` - Einzelner Benutzer
-- `POST /api/users` - Benutzer erstellen (body: first_name, last_name)
-- `PUT /api/users/:id` - Benutzer aktualisieren (body: first_name, last_name)
-- `DELETE /api/users/:id` - Benutzer löschen
+- `GET /api/users` - All users (ORDER BY created_at DESC)
+- `GET /api/users/:id` - Single user
+- `POST /api/users` - Create user (body: first_name, last_name)
+- `PUT /api/users/:id` - Update user (body: first_name, last_name)
+- `DELETE /api/users/:id` - Delete user
 
 ### RFID Cards
-- `GET /api/cards` - Alle Karten mit JOIN (c.*, u.first_name, u.last_name)
-- `GET /api/cards/:cardId` - Einzelne Karte mit User-Info
-- `GET /api/users/:userId/cards` - Karten eines Benutzers
-- `POST /api/cards` - Karte erstellen (body: card_id, user_id?, authorized?)
-- `PUT /api/cards/:cardId` - Karte aktualisieren (body: user_id, authorized)
-- `DELETE /api/cards/:cardId` - Karte löschen
-- `PATCH /api/cards/:cardId/authorize` - Karte autorisieren
-- `PATCH /api/cards/:cardId/revoke` - Autorisierung widerrufen
-- `GET /api/cards/:cardId/verify` - Prüft Autorisierungsstatus (für Testing)
+- `GET /api/cards` - All cards with JOIN (c.*, u.first_name, u.last_name)
+- `GET /api/cards/:cardId` - Single card with user info
+- `GET /api/users/:userId/cards` - Cards of a user
+- `POST /api/cards` - Create card (body: card_id, user_id?, authorized?)
+- `PUT /api/cards/:cardId` - Update card (body: user_id, authorized)
+- `DELETE /api/cards/:cardId` - Delete card
+- `PATCH /api/cards/:cardId/authorize` - Authorize card
+- `PATCH /api/cards/:cardId/revoke` - Revoke authorization
+- `GET /api/cards/:cardId/verify` - Check authorization status (for testing)
 
 ### Access Logs
-- `GET /api/logs` - Alle Protokolle (Query: access_granted, limit, offset)
-- `GET /api/logs/:id` - Einzelnes Protokoll
-- `GET /api/logs/recent?limit=10` - Letzte n Protokolle (ORDER BY access_time DESC)
+- `GET /api/logs` - All logs (Query: access_granted, limit, offset)
+- `GET /api/logs/:id` - Single log
+- `GET /api/logs/recent?limit=10` - Last n logs (ORDER BY access_time DESC)
 
 ### Arduino Serial Communication
-Das Backend lauscht automatisch auf Serial-Daten vom Arduino:
-- **Format vom Arduino:** `"USER ID tag : XX XX XX XX"` (z.B. " A1 B2 C3 D4")
-- **Backend-Verarbeitung:**
-  1. Extrahiert UID aus Serial-Nachricht
-  2. Konvertiert zu Großbuchstaben
-  3. Sucht Karte in Datenbank
-  4. Prüft `authorized` Status
-  5. Erstellt Log-Eintrag in `access_log`
-  6. Sendet Antwort zurück
-- **Format zum Arduino:** `GRANTED\n` oder `DENIED\n`
-- **Timeout:** Arduino wartet max. 5 Sekunden auf Antwort
+Backend automatically listens for serial data from Arduino:
+- **Format from Arduino:** `"USER ID tag : XX XX XX XX"` (e.g., "A1 B2 C3 D4")
+- **Backend processing:**
+  1. Extracts UID from serial message
+  2. Converts to uppercase
+  3. Searches card in database
+  4. Checks `authorized` status
+  5. Creates log entry in `access_log`
+  6. Sends response back
+- **Format to Arduino:** `GRANTED\n` or `DENIED\n`
+- **Timeout:** Arduino waits max. 5 seconds for response
 
-## Build für Produktion
+## Build for Production
 
 **Frontend:**
 ```bash
 cd frontend
 npm run build
 ```
-Die Build-Dateien werden im `frontend/dist/` Ordner erstellt.
+Build files are created in the `frontend/dist/` folder.
 
-**Vorschau der Produktions-Version:**
+**Preview production version:**
 ```bash
 npm run preview
 ```
@@ -228,86 +241,105 @@ npm run preview
 **Backend:**
 ```bash
 cd backend
-npm start  # Production mode
-# oder
-npm run dev  # Development mode mit nodemon
+npm start      # Production mode (runs server.js directly)
+npm run dev    # Development mode with nodemon (auto-restart on file changes)
 ```
 
-## Projektstruktur
+## Project Structure
 
 ```
 NextGen Lock/
 ├── arduino/
 │   └── NextGenLock-Arduino/
 │       ├── src/
-│       │   └── main.cpp         # Arduino Code mit RFID & Serial
-│       ├── platformio.ini       # PlatformIO Konfiguration
-│       └── include/
+│       │   └── main.cpp         # Arduino code with RFID & Serial
+│       ├── platformio.ini       # PlatformIO configuration
+│       ├── include/
+│       ├── lib/
+│       └── test/
 ├── backend/
-│   ├── server.js                # Express Server mit SQLite & SerialPort
-│   ├── package.json             # Backend Dependencies
+│   ├── server.js                # Express server with SQLite & SerialPort
+│   ├── package.json             # Backend dependencies
 │   └── README.md
 ├── db/
-│   ├── nextgenlock.db          # SQLite Datenbank (wird generiert)
-│   ├── setupTables.sql         # Datenbank Schema (CREATE TABLE)
-│   ├── generateMockup.sql      # Test-Daten (INSERT Statements)
-│   └── resetDb.js              # Node.js Skript zum DB-Setup
+│   ├── nextgenlock.db          # SQLite database (auto-generated)
+│   ├── setupTables.sql         # Database schema (CREATE TABLE)
+│   ├── generateMockup.sql      # Test data (INSERT statements)
+│   └── resetDb.js              # Node.js script for DB setup
 ├── frontend/
 │   ├── src/
 │   │   ├── pages/
-│   │   │   ├── Dashboard.jsx    # Dashboard mit Statistiken
-│   │   │   ├── AccessLogs.jsx   # Zugriffsprotokolle
-│   │   │   ├── UsersPage.jsx    # Benutzerverwaltung
-│   │   │   └── RFIDCards.jsx    # RFID-Kartenverwaltung
+│   │   │   ├── Dashboard.jsx    # Dashboard with statistics
+│   │   │   ├── AccessLogs.jsx   # Access logs
+│   │   │   ├── UsersPage.jsx    # User management
+│   │   │   └── RFIDCards.jsx    # RFID card management
 │   │   ├── components/
-│   │   │   └── ConfirmModal.jsx # Bestätigungs-Dialog für Löschvorgänge
+│   │   │   ├── ConfirmModal.jsx # Confirmation dialog for delete operations
+│   │   │   └── Splashscreen.jsx # Loading/splash screen
+│   │   ├── hooks/
+│   │   │   └── useDarkMode.js   # Dark mode toggle hook
 │   │   ├── services/
-│   │   │   ├── api.js           # Axios API Client (usersAPI, cardsAPI, logsAPI)
-│   │   │   ├── dummyData.js     # Mock-Daten für Entwicklung
-│   │   │   └── testapi.js       # API-Tests
-│   │   ├── App.jsx              # React Router Setup
-│   │   ├── App.css              # App-Styles
-│   │   ├── index.css            # Global Styles + Tailwind
-│   │   └── main.jsx             # Entry Point
-│   ├── index.html               # HTML Template
-│   ├── vite.config.js           # Vite mit API Proxy
-│   ├── tailwind.config.js       # Tailwind CSS 4 Config
-│   ├── postcss.config.js        # PostCSS Config
-│   └── package.json             # Frontend Dependencies
-├── start-servers.bat            # Windows Batch Starter
-├── start-servers.ps1            # Windows PowerShell Starter
-├── start-servers.sh             # Linux Bash Starter
-└── README.md                    # Diese Datei
+│   │   │   └── api.js           # Axios API client (usersAPI, cardsAPI, logsAPI)
+│   │   ├── App.jsx              # React Router setup
+│   │   ├── App.css              # App styles
+│   │   ├── index.css            # Global styles + Tailwind
+│   │   └── main.jsx             # Entry point
+│   ├── index.html               # HTML template
+│   ├── vite.config.js           # Vite with API proxy
+│   ├── tailwind.config.js       # Tailwind CSS 4 config
+│   ├── postcss.config.js        # PostCSS config
+│   ├── package.json             # Frontend dependencies
+│   └── public/
+│       └── images/              # Static images
+├── start-servers.bat            # Windows batch starter
+├── start-servers.ps1            # Windows PowerShell starter
+├── start-servers.sh             # Linux bash starter
+└── README.md                    # This file
 
 ```
 
 ## Arduino Hardware Setup
 
-### Komponenten
-- Arduino Board (Uno, Nano, etc.)
-- MFRC522 RFID Reader
-- RGB LED (oder 3 separate LEDs)
-  - Pin 5: Rot (Access Denied)
-  - Pin 6: Grün (Access Granted)
-  - Pin 7: Blau (RFID Detected)
-- Buzzer an Pin 2
-- MFRC522 Pins:
+### Components
+- Arduino board (Uno, Nano, etc.)
+- MFRC522 RFID reader
+- RGB LED (or 3 separate LEDs)
+  - Pin 5: Red (Access Denied)
+  - Pin 6: Green (Access Granted)
+  - Pin 7: Blue (RFID Detected)
+- Buzzer at Pin 2
+- MFRC522 pins:
   - SS: Pin 10
   - RST: Pin 9
-  - SPI: Standard Arduino SPI Pins
+  - SPI: Standard Arduino SPI pins
 
-### LED Status-Maschine
-Der Arduino verwendet ein `ledState` Enum mit 4 Zuständen:
-- **IDLE** - Alle LEDs aus, wartet auf RFID-Karte
-- **RFID_DETECTED** - Blaue LED an, wartet auf Backend-Antwort
-- **ACCESS_GRANTED** - Grüne LED an + Buzzer 2s Dauerton
-- **ACCESS_DENIED** - Rote LED an + Buzzer 3x 250ms Piep (insgesamt 1.5s)
+### PlatformIO Configuration
 
-### Buzzer-Muster
-- **Zugang gewährt:** 2 Sekunden Dauerton
-- **Zugang verweigert:** 3 kurze Pieptöne (je 250ms Ton + 250ms Pause)
+The Arduino project uses PlatformIO for development. Configuration is in `platformio.ini`:
 
-### Verdrahtung
+```ini
+[env:uno]
+platform = atmelavr
+board = uno
+framework = arduino
+lib_deps = miguelbalboa/MFRC522@^1.4.12
+```
+
+### Libraries
+- **MFRC522** - RFID reader library for SPI communication with MFRC522 module
+
+### LED State Machine
+Arduino uses a `ledState` enum with 4 states:
+- **IDLE** - All LEDs off, waiting for RFID card
+- **RFID_DETECTED** - Blue LED on, waiting for backend response
+- **ACCESS_GRANTED** - Green LED on + buzzer 2s continuous tone
+- **ACCESS_DENIED** - Red LED on + buzzer 3x 250ms beeps (total 1.5s)
+
+### Buzzer Patterns
+- **Access granted:** 2 seconds continuous tone
+- **Access denied:** 3 short beeps (250ms tone + 250ms pause each)
+
+### Wiring
 ```
 MFRC522    -> Arduino
 SDA (SS)   -> Pin 10 (SS_PIN)
@@ -318,31 +350,31 @@ MISO       -> Pin 12 (Standard SPI)
 3.3V       -> 3.3V
 GND        -> GND
 
-LED Rot    -> Pin 5 (LED_R_PIN, mit 220Ω Widerstand)
-LED Grün   -> Pin 6 (LED_G_PIN, mit 220Ω Widerstand)
-LED Blau   -> Pin 7 (LED_B_PIN, mit 220Ω Widerstand)
+LED Red    -> Pin 5 (LED_R_PIN, with 220Ω resistor)
+LED Green  -> Pin 6 (LED_G_PIN, with 220Ω resistor)
+LED Blue   -> Pin 7 (LED_B_PIN, with 220Ω resistor)
 Buzzer     -> Pin 2 (BUZZER)
 ```
 
-## Hinweise & Troubleshooting
+## Notes & Troubleshooting
 
 ### Ports
-- Backend läuft auf Port **5000**
-- Frontend Dev-Server auf Port **3000**
-- Arduino kommuniziert über SerialPort (9600 Baud)
+- Backend runs on port **5000**
+- Frontend dev server on port **3000**
+- Arduino communicates via SerialPort (9600 baud)
 
 ### Arduino
-- Wird automatisch erkannt über SerialPort-Suche (COM/ttyACM/ttyUSB)
-- Benötigt PlatformIO für Entwicklung
-- **Linux:** Möglicherweise Berechtigung erforderlich: `sudo chmod 666 /dev/ttyACM0`
+- Automatically detected via SerialPort search (COM/ttyACM/ttyUSB)
+- Requires PlatformIO for development
+- **Linux:** May require permission: `sudo chmod 666 /dev/ttyACM0`
 
-### Datenbank
-- SQLite-Datenbank: `db/nextgenlock.db`
-- Setup-Skripte: `setupTables.sql`, `generateMockup.sql`
+### Database
+- SQLite database: `db/nextgenlock.db`
+- Setup scripts: `setupTables.sql`, `generateMockup.sql`
 - Reset: `node db/resetDb.js`
 
 ### Dependencies
-- Alle Dependencies werden automatisch durch die Starter-Skripte installiert
-- Frontend benötigt Node.js 18+
-- Backend benötigt Node.js 16+ und Build-Tools für better-sqlite3
+- All dependencies are automatically installed by the starter scripts
+- Frontend requires Node.js 18+
+- Backend requires Node.js 16+ and build tools for better-sqlite3
 
