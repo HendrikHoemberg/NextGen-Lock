@@ -183,6 +183,7 @@ function UsersPage() {
   const [showModal, setShowModal] = useState(false)
   const [editingUser, setEditingUser] = useState(null)
   const [confirmDelete, setConfirmDelete] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadUsers()
@@ -234,7 +235,7 @@ function UsersPage() {
   }
 
   const handleViewCards = (user) => {
-    window.location.href = `/cards?user=${user.user_id}`
+    navigate(`/cards?user=${user.user_id}`)
   }
 
   if (loading) {
