@@ -2,6 +2,7 @@ import { format } from 'date-fns'
 import { de } from 'date-fns/locale'
 import { CheckCircle, CreditCard, Users, XCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { cardsAPI, logsAPI, usersAPI } from '../services/api'
 
 function StatCard({ title, value, icon: Icon, color }) {
@@ -145,9 +146,9 @@ function Dashboard() {
       <div className="card">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">Letzte Zugriffe</h2>
-          <a href="/logs" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">
+          <Link to="/logs" className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium">
             Alle anzeigen →
-          </a>
+          </Link>
         </div>
         
         {recentLogs.length === 0 ? (
