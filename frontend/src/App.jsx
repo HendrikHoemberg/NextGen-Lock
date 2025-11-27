@@ -98,7 +98,7 @@ function App() {
     <>
       {showSplash && <Splashscreen onFinish={() => setShowSplash(false)} />}
       <Router>
-        <div className="min-h-screen bg-gray-200 dark:bg-gray-900 transition-colors duration-200">
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-200">
           <Navigation />
           <main className="px-4 pb-16 pt-22 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <Routes>
