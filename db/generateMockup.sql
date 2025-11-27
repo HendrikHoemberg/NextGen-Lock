@@ -1,83 +1,130 @@
+-- PRAGMA foreign_keys = ON;
+
+-- INSERT INTO user (first_name, last_name, created_at) VALUES
+-- ('Anna', 'Müller', datetime('now','-30 days')),
+-- ('Jonas', 'Schmidt', datetime('now','-28 days')),
+-- ('Laura', 'Fischer', datetime('now','-25 days')),
+-- ('Peter', 'Weber', datetime('now','-20 days')),
+-- ('Sofia', 'Klein', datetime('now','-18 days')),
+-- ('Lukas', 'Neumann', datetime('now','-15 days')),
+-- ('Mia', 'Schulz', datetime('now','-12 days')),
+-- ('Felix', 'Brandt', datetime('now','-10 days')),
+-- ('Emma', 'Hoffmann', datetime('now','-7 days')),
+-- ('Max', 'Bauer', datetime('now','-5 days'));
+
+-- INSERT INTO rfid_card (card_uid, user_id, authorized, added_on) VALUES
+-- ('04A3B21C', 1, 1, datetime('now','-29 days')),
+-- ('09FF11AA', 1, 1, datetime('now','-29 days')),
+-- ('8812CC09', 2, 1, datetime('now','-27 days')),
+-- ('77AB9921', 3, 0, datetime('now','-24 days')),
+-- ('55CD8890', 4, 1, datetime('now','-19 days')),
+-- ('0011AABB', 5, 0, datetime('now','-17 days')),
+-- ('DEADBEEF', NULL, 0, datetime('now','-16 days')),
+-- ('AB12CD34', 6, 1, datetime('now','-14 days')),
+-- ('CD56EF78', 7, 1, datetime('now','-11 days')),
+-- ('EF90AB12', 8, 0, datetime('now','-9 days')),
+-- ('1234ABCD', 9, 1, datetime('now','-6 days')),
+-- ('5678EFGH', 10, 1, datetime('now','-4 days')),
+-- ('AAAA1111', NULL, 0, datetime('now','-3 days')),
+-- ('BBBB2222', 2, 1, datetime('now','-2 days')),
+-- ('CCCC3333', 3, 0, datetime('now','-1 days'));
+
+-- INSERT INTO access_log (card_uid, access_time, access_granted, note) VALUES
+-- ('04A3B21C', datetime('now','-29 days','+08 hours'), 1, 'Tür geöffnet'),
+-- ('04A3B21C', datetime('now','-28 days','+09 hours'), 1, 'Bürozugang'),
+-- ('09FF11AA', datetime('now','-28 days','+10 hours'), 1, 'Tür geöffnet'),
+-- ('8812CC09', datetime('now','-27 days','+11 hours'), 1, 'Werkstatt Zugang'),
+-- ('77AB9921', datetime('now','-26 days','+08 hours'), 0, 'Karte nicht autorisiert'),
+-- ('55CD8890', datetime('now','-19 days','+09 hours'), 1, 'Serverraum Zugang'),
+-- ('0011AABB', datetime('now','-17 days','+10 hours'), 0, 'Inhaber nicht autorisiert'),
+-- ('DEADBEEF', datetime('now','-16 days','+12 hours'), 0, 'Unbekannte Karte'),
+-- ('AB12CD34', datetime('now','-14 days','+08 hours'), 1, 'Labor Zugang'),
+-- ('CD56EF78', datetime('now','-11 days','+09 hours'), 1, 'Bürozugang'),
+-- ('EF90AB12', datetime('now','-9 days','+08 hours'), 0, 'Nicht autorisiert'),
+-- ('1234ABCD', datetime('now','-6 days','+09 hours'), 1, 'Serverraum Zugang'),
+-- ('5678EFGH', datetime('now','-4 days','+08 hours'), 1, 'Tür geöffnet'),
+-- ('AAAA1111', datetime('now','-3 days','+10 hours'), 0, 'Unbekannte Karte'),
+-- ('BBBB2222', datetime('now','-2 days','+09 hours'), 1, 'Werkstatt Zugang'),
+-- ('CCCC3333', datetime('now','-1 days','+08 hours'), 0, 'Nicht autorisiert'),
+-- ('04A3B21C', datetime('now','-1 days','+14 hours'), 1, 'Später Zugang'),
+-- ('8812CC09', datetime('now','-5 days','+15 hours'), 1, 'Regulärer Zugang'),
+-- ('09FF11AA', datetime('now','-7 days','+08 hours'), 1, 'Tür geöffnet'),
+-- ('77AB9921', datetime('now','-8 days','+09 hours'), 0, 'Karte nicht autorisiert'),
+-- ('55CD8890', datetime('now','-10 days','+10 hours'), 1, 'Bürozugang'),
+-- ('0011AABB', datetime('now','-12 days','+08 hours'), 0, 'Nicht autorisiert'),
+-- ('DEADBEEF', datetime('now','-15 days','+11 hours'), 0, 'Unbekannte Karte'),
+-- ('AB12CD34', datetime('now','-13 days','+09 hours'), 1, 'Labor Zugang'),
+-- ('CD56EF78', datetime('now','-10 days','+14 hours'), 1, 'Tür geöffnet'),
+-- ('EF90AB12', datetime('now','-9 days','+15 hours'), 0, 'Nicht autorisiert'),
+-- ('1234ABCD', datetime('now','-5 days','+13 hours'), 1, 'Serverraum Zugang'),
+-- ('5678EFGH', datetime('now','-4 days','+12 hours'), 1, 'Bürozugang'),
+-- ('AAAA1111', datetime('now','-3 days','+11 hours'), 0, 'Unbekannte Karte'),
+-- ('BBBB2222', datetime('now','-2 days','+10 hours'), 1, 'Werkstatt Zugang'),
+-- ('CCCC3333', datetime('now','-1 days','+09 hours'), 0, 'Nicht autorisiert'),
+-- ('04A3B21C', datetime('now','-6 days','+08 hours'), 1, 'Regulärer Zugang'),
+-- ('09FF11AA', datetime('now','-5 days','+09 hours'), 1, 'Bürozugang'),
+-- ('8812CC09', datetime('now','-4 days','+10 hours'), 1, 'Labor Zugang'),
+-- ('77AB9921', datetime('now','-3 days','+08 hours'), 0, 'Nicht autorisiert'),
+-- ('55CD8890', datetime('now','-2 days','+09 hours'), 1, 'Serverraum Zugang'),
+-- ('0011AABB', datetime('now','-1 days','+10 hours'), 0, 'Nicht autorisiert'),
+-- ('DEADBEEF', datetime('now','-1 days','+11 hours'), 0, 'Unbekannte Karte'),
+-- ('AB12CD34', datetime('now','-2 days','+12 hours'), 1, 'Labor Zugang'),
+-- ('CD56EF78', datetime('now','-3 days','+13 hours'), 1, 'Tür geöffnet'),
+-- ('EF90AB12', datetime('now','-4 days','+14 hours'), 0, 'Nicht autorisiert'),
+-- ('1234ABCD', datetime('now','-5 days','+15 hours'), 1, 'Serverraum Zugang'),
+-- ('5678EFGH', datetime('now','-6 days','+08 hours'), 1, 'Bürozugang'),
+-- ('AAAA1111', datetime('now','-7 days','+09 hours'), 0, 'Unbekannte Karte'),
+-- ('BBBB2222', datetime('now','-8 days','+10 hours'), 1, 'Werkstatt Zugang'),
+-- ('CCCC3333', datetime('now','-9 days','+11 hours'), 0, 'Nicht autorisiert'),
+-- ('04A3B21C', datetime('now','-10 days','+12 hours'), 1, 'Regulärer Zugang'),
+-- ('09FF11AA', datetime('now','-11 days','+13 hours'), 1, 'Tür geöffnet'),
+-- ('8812CC09', datetime('now','-12 days','+14 hours'), 1, 'Labor Zugang'),
+-- ('77AB9921', datetime('now','-13 days','+15 hours'), 0, 'Nicht autorisiert'),
+-- ('55CD8890', datetime('now','-14 days','+08 hours'), 1, 'Serverraum Zugang');
+
+
 PRAGMA foreign_keys = ON;
 
+-- 1. Tabelle User: Die neuen Personen
 INSERT INTO user (first_name, last_name, created_at) VALUES
-('Anna', 'Müller', datetime('now','-30 days')),
-('Jonas', 'Schmidt', datetime('now','-28 days')),
-('Laura', 'Fischer', datetime('now','-25 days')),
-('Peter', 'Weber', datetime('now','-20 days')),
-('Sofia', 'Klein', datetime('now','-18 days')),
-('Lukas', 'Neumann', datetime('now','-15 days')),
-('Mia', 'Schulz', datetime('now','-12 days')),
-('Felix', 'Brandt', datetime('now','-10 days')),
-('Emma', 'Hoffmann', datetime('now','-7 days')),
-('Max', 'Bauer', datetime('now','-5 days'));
+('Luca', 'Textor', datetime('now','-30 days')),
+('Egon', 'Kowalski', datetime('now','-28 days')),
+('Arno', 'Dübel', datetime('now','-25 days')),
+('Sebastian', 'Meisinger', datetime('now','-20 days')),
+('Marc', 'Menk', datetime('now','-18 days')),
+('Ligma', 'Ballz', datetime('now','-15 days')),
+('Rainer', 'Winkler', datetime('now','-12 days')),
+('Marius', 'Jung', datetime('now','-10 days'));
 
+-- 2. Tabelle RFID Cards: UIDs aus dem Bild
+-- Hinweis: Da wir nur 5 UIDs im Bild haben, aber 8 Nutzer, 
+-- erhalten nur die ersten 5 Nutzer eine Karte.
+-- Die letzte Karte (E395B90D) setzen wir auf authorized=0, um Fehler zu simulieren.
 INSERT INTO rfid_card (card_uid, user_id, authorized, added_on) VALUES
-('04A3B21C', 1, 1, datetime('now','-29 days')),
-('09FF11AA', 1, 1, datetime('now','-29 days')),
-('8812CC09', 2, 1, datetime('now','-27 days')),
-('77AB9921', 3, 0, datetime('now','-24 days')),
-('55CD8890', 4, 1, datetime('now','-19 days')),
-('0011AABB', 5, 0, datetime('now','-17 days')),
-('DEADBEEF', NULL, 0, datetime('now','-16 days')),
-('AB12CD34', 6, 1, datetime('now','-14 days')),
-('CD56EF78', 7, 1, datetime('now','-11 days')),
-('EF90AB12', 8, 0, datetime('now','-9 days')),
-('1234ABCD', 9, 1, datetime('now','-6 days')),
-('5678EFGH', 10, 1, datetime('now','-4 days')),
-('AAAA1111', NULL, 0, datetime('now','-3 days')),
-('BBBB2222', 2, 1, datetime('now','-2 days')),
-('CCCC3333', 3, 0, datetime('now','-1 days'));
+('43C6D418', 1, 1, datetime('now','-29 days')), -- Luca Textor (Aktiv)
+('B39FD6EC', 2, 1, datetime('now','-27 days')), -- Egon Kowalski (Aktiv)
+('33B3AF0D', 3, 1, datetime('now','-24 days')), -- Arno Dübel (Aktiv)
+('4C56474A', 4, 1, datetime('now','-19 days')), -- Sebastian Meisinger (Aktiv)
+('E395B90D', 5, 0, datetime('now','-17 days')); -- Marc Menk (Inaktiv/Gesperrt)
 
+-- 3. Tabelle Access Log: Szenarien mit den neuen Kommentaren
 INSERT INTO access_log (card_uid, access_time, access_granted, note) VALUES
-('04A3B21C', datetime('now','-29 days','+08 hours'), 1, 'Tür geöffnet'),
-('04A3B21C', datetime('now','-28 days','+09 hours'), 1, 'Bürozugang'),
-('09FF11AA', datetime('now','-28 days','+10 hours'), 1, 'Tür geöffnet'),
-('8812CC09', datetime('now','-27 days','+11 hours'), 1, 'Werkstatt Zugang'),
-('77AB9921', datetime('now','-26 days','+08 hours'), 0, 'Karte nicht autorisiert'),
-('55CD8890', datetime('now','-19 days','+09 hours'), 1, 'Serverraum Zugang'),
-('0011AABB', datetime('now','-17 days','+10 hours'), 0, 'Inhaber nicht autorisiert'),
-('DEADBEEF', datetime('now','-16 days','+12 hours'), 0, 'Unbekannte Karte'),
-('AB12CD34', datetime('now','-14 days','+08 hours'), 1, 'Labor Zugang'),
-('CD56EF78', datetime('now','-11 days','+09 hours'), 1, 'Bürozugang'),
-('EF90AB12', datetime('now','-9 days','+08 hours'), 0, 'Nicht autorisiert'),
-('1234ABCD', datetime('now','-6 days','+09 hours'), 1, 'Serverraum Zugang'),
-('5678EFGH', datetime('now','-4 days','+08 hours'), 1, 'Tür geöffnet'),
-('AAAA1111', datetime('now','-3 days','+10 hours'), 0, 'Unbekannte Karte'),
-('BBBB2222', datetime('now','-2 days','+09 hours'), 1, 'Werkstatt Zugang'),
-('CCCC3333', datetime('now','-1 days','+08 hours'), 0, 'Nicht autorisiert'),
-('04A3B21C', datetime('now','-1 days','+14 hours'), 1, 'Später Zugang'),
-('8812CC09', datetime('now','-5 days','+15 hours'), 1, 'Regulärer Zugang'),
-('09FF11AA', datetime('now','-7 days','+08 hours'), 1, 'Tür geöffnet'),
-('77AB9921', datetime('now','-8 days','+09 hours'), 0, 'Karte nicht autorisiert'),
-('55CD8890', datetime('now','-10 days','+10 hours'), 1, 'Bürozugang'),
-('0011AABB', datetime('now','-12 days','+08 hours'), 0, 'Nicht autorisiert'),
-('DEADBEEF', datetime('now','-15 days','+11 hours'), 0, 'Unbekannte Karte'),
-('AB12CD34', datetime('now','-13 days','+09 hours'), 1, 'Labor Zugang'),
-('CD56EF78', datetime('now','-10 days','+14 hours'), 1, 'Tür geöffnet'),
-('EF90AB12', datetime('now','-9 days','+15 hours'), 0, 'Nicht autorisiert'),
-('1234ABCD', datetime('now','-5 days','+13 hours'), 1, 'Serverraum Zugang'),
-('5678EFGH', datetime('now','-4 days','+12 hours'), 1, 'Bürozugang'),
-('AAAA1111', datetime('now','-3 days','+11 hours'), 0, 'Unbekannte Karte'),
-('BBBB2222', datetime('now','-2 days','+10 hours'), 1, 'Werkstatt Zugang'),
-('CCCC3333', datetime('now','-1 days','+09 hours'), 0, 'Nicht autorisiert'),
-('04A3B21C', datetime('now','-6 days','+08 hours'), 1, 'Regulärer Zugang'),
-('09FF11AA', datetime('now','-5 days','+09 hours'), 1, 'Bürozugang'),
-('8812CC09', datetime('now','-4 days','+10 hours'), 1, 'Labor Zugang'),
-('77AB9921', datetime('now','-3 days','+08 hours'), 0, 'Nicht autorisiert'),
-('55CD8890', datetime('now','-2 days','+09 hours'), 1, 'Serverraum Zugang'),
-('0011AABB', datetime('now','-1 days','+10 hours'), 0, 'Nicht autorisiert'),
-('DEADBEEF', datetime('now','-1 days','+11 hours'), 0, 'Unbekannte Karte'),
-('AB12CD34', datetime('now','-2 days','+12 hours'), 1, 'Labor Zugang'),
-('CD56EF78', datetime('now','-3 days','+13 hours'), 1, 'Tür geöffnet'),
-('EF90AB12', datetime('now','-4 days','+14 hours'), 0, 'Nicht autorisiert'),
-('1234ABCD', datetime('now','-5 days','+15 hours'), 1, 'Serverraum Zugang'),
-('5678EFGH', datetime('now','-6 days','+08 hours'), 1, 'Bürozugang'),
-('AAAA1111', datetime('now','-7 days','+09 hours'), 0, 'Unbekannte Karte'),
-('BBBB2222', datetime('now','-8 days','+10 hours'), 1, 'Werkstatt Zugang'),
-('CCCC3333', datetime('now','-9 days','+11 hours'), 0, 'Nicht autorisiert'),
-('04A3B21C', datetime('now','-10 days','+12 hours'), 1, 'Regulärer Zugang'),
-('09FF11AA', datetime('now','-11 days','+13 hours'), 1, 'Tür geöffnet'),
-('8812CC09', datetime('now','-12 days','+14 hours'), 1, 'Labor Zugang'),
-('77AB9921', datetime('now','-13 days','+15 hours'), 0, 'Nicht autorisiert'),
-('55CD8890', datetime('now','-14 days','+08 hours'), 1, 'Serverraum Zugang');
+-- Erfolgreiche Zugriffe
+('43C6D418', datetime('now','-5 days','+08 hours'), 1, 'Karte autorisiert'),
+('B39FD6EC', datetime('now','-5 days','+09 hours'), 1, 'Karte autorisiert'),
+('33B3AF0D', datetime('now','-4 days','+08 hours'), 1, 'Karte autorisiert'),
+
+-- Karte existiert, aber nicht autorisiert (Marc Menk)
+('E395B90D', datetime('now','-4 days','+10 hours'), 0, 'Karte nicht autorisiert'),
+
+-- Karte komplett unbekannt (Fremde UID)
+('DEADBEEF', datetime('now','-3 days','+12 hours'), 0, 'Karte nicht registriert'),
+
+-- Weitere gemischte Logs
+('4C56474A', datetime('now','-3 days','+08 hours'), 1, 'Karte autorisiert'),
+('43C6D418', datetime('now','-2 days','+08 hours'), 1, 'Karte autorisiert'),
+('E395B90D', datetime('now','-2 days','+14 hours'), 0, 'Karte nicht autorisiert'),
+('11223344', datetime('now','-1 days','+23 hours'), 0, 'Karte nicht registriert'),
+('B39FD6EC', datetime('now','-1 days','+07 hours'), 1, 'Karte autorisiert'),
+('33B3AF0D', datetime('now','-1 days','+08 hours'), 1, 'Karte autorisiert'),
+('4C56474A', datetime('now','-0 days','+09 hours'), 1, 'Karte autorisiert');

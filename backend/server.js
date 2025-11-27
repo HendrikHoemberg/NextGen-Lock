@@ -82,7 +82,7 @@ function handleArduinoData(data) {
         note = 'Karte nicht autorisiert';
       } else {
         accessGranted = true;
-        note = 'Zugriff gewährt';
+        note = 'Karte autorisiert';
       }
       
       // Log the access attempt
