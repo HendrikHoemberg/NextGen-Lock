@@ -1,5 +1,5 @@
 import { CreditCard, LayoutDashboard, Lock, Moon, Sun, Users } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link, Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom'
 import './App.css'
 import Splashscreen from './components/Splashscreen'
@@ -13,6 +13,20 @@ function Navigation() {
   const location = useLocation()
   const { isDarkMode, toggleDarkMode, syncWithSystem } = useDarkMode()
   const [showMenu, setShowMenu] = useState(false)
+  const menuRef = useRef(null)
+  const buttonRef = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showMenu && menuRef.current && !menuRef.current.contains(event.target) && event.target !== buttonRef.current) {
+        setShowMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showMenu])
   
   const navItems = [
     { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
@@ -59,6 +73,7 @@ function Navigation() {
           <div className="flex items-center space-x-4">
             <div className="relative">
               <button
+                ref={buttonRef}
                 onClick={() => setShowMenu(!showMenu)}
                 className="p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 focus:outline-none rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                 aria-label="Toggle Dark Mode"
@@ -68,7 +83,7 @@ function Navigation() {
               </button>
               
               {showMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg z-50">
+                <div ref={menuRef} className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg z-50">
                   <button
                     onClick={toggleDarkMode}
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-t-lg transition-colors"
