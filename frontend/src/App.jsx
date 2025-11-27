@@ -100,7 +100,7 @@ function App() {
       <Router>
         <div className="min-h-screen bg-gray-200 dark:bg-gray-900 transition-colors duration-200">
           <Navigation />
-          <main className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8 pt-16">
+          <main className="px-4 pb-16 pt-22 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/logs" element={<AccessLogs />} />
