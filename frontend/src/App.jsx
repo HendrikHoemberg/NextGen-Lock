@@ -33,7 +33,7 @@ function Navigation() {
           <div className="flex">
             <div className="flex items-center flex-shrink-0">
               <img src="/images/favicon.png" alt="Next-Gen Lock" className="w-8 h-8" />
-              <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">Next-Gen Lock</span>
+              <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">NEXTGEN LOCK</span>
             </div>
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
               {navItems.map((item) => {
