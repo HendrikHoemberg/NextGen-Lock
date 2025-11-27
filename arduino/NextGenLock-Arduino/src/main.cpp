@@ -57,8 +57,6 @@ void setup()
   Serial.println("Please scan your RFID card...");
   Serial.println();
 
-  // pinMode(pinLED, OUTPUT);
-
   pinMode(LED_R_PIN, OUTPUT);
   pinMode(LED_G_PIN, OUTPUT);
   pinMode(LED_B_PIN, OUTPUT);
