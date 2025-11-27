@@ -90,10 +90,6 @@ void loop()
   }
   content.toUpperCase();
   
-  // Send UID to backend via serial
-  Serial.print("USER ID tag :");
-  Serial.println(content);
-  
   // Show blue LED while waiting for backend response
   for (int i = 0; i < 3; i++) {
       setStatusLED(RFID_DETECTED);
@@ -101,6 +97,10 @@ void loop()
       setStatusLED(IDLE);
       delay(250);  
   }
+  
+  // Send UID to backend via serial after blinking completes
+  Serial.print("USER ID tag :");
+  Serial.println(content);
   
   // Wait for response from backend (max 5 seconds)
   unsigned long startTime = millis();

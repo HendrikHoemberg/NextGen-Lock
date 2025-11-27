@@ -2,6 +2,7 @@ import { format } from 'date-fns'
 import { de } from 'date-fns/locale'
 import { CreditCard, Edit2, Trash2, UserPlus } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import ConfirmModal from '../components/ConfirmModal'
 import { cardsAPI, usersAPI } from '../services/api'
 
