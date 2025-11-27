@@ -27,7 +27,7 @@ function Navigation() {
   }
 
   return (
-    <nav className="bg-white dark:bg-gray-800 shadow-lg transition-colors duration-200">
+    <nav className="fixed top-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg transition-colors duration-200 z-50">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
@@ -84,7 +84,6 @@ function Navigation() {
                 </div>
               )}
             </div>
-            <span className="text-sm text-gray-600 dark:text-gray-300">Die Grimmigen</span>
           </div>
         </div>
       </div>
@@ -101,7 +100,7 @@ function App() {
       <Router>
         <div className="min-h-screen bg-gray-200 dark:bg-gray-900 transition-colors duration-200">
           <Navigation />
-          <main className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <main className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8 pt-16">
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/logs" element={<AccessLogs />} />
@@ -109,6 +108,11 @@ function App() {
               <Route path="/cards" element={<RFIDCards />} />
             </Routes>
           </main>
+          <footer className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg z-50 p-2 text-center text-sm text-gray-600 dark:text-gray-300">
+            <a href="https://github.com/HendrikHoemberg/NextGen-Lock" target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition-colors">
+              © Die Grimmigen - Julian Naumann & Hendrik Hömberg
+            </a>
+          </footer>
         </div>
       </Router>
     </>
