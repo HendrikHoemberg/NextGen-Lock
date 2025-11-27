@@ -101,30 +101,30 @@ INSERT INTO user (first_name, last_name, created_at) VALUES
 -- erhalten nur die ersten 5 Nutzer eine Karte.
 -- Die letzte Karte (E395B90D) setzen wir auf authorized=0, um Fehler zu simulieren.
 INSERT INTO rfid_card (card_uid, user_id, authorized, added_on) VALUES
-('43C6D418', 1, 1, datetime('now','-29 days')), -- Luca Textor (Aktiv)
-('B39FD6EC', 2, 1, datetime('now','-27 days')), -- Egon Kowalski (Aktiv)
-('33B3AF0D', 3, 1, datetime('now','-24 days')), -- Arno Dübel (Aktiv)
-('4C56474A', 4, 1, datetime('now','-19 days')), -- Sebastian Meisinger (Aktiv)
-('E395B90D', 5, 0, datetime('now','-17 days')); -- Marc Menk (Inaktiv/Gesperrt)
+('43 C6 D4 18', 1, 1, datetime('now','-29 days')), -- Luca Textor (Aktiv)
+('B3 9F D6 EC', 2, 1, datetime('now','-27 days')), -- Egon Kowalski (Aktiv)
+('33 B3 AF 0D', 3, 1, datetime('now','-24 days')), -- Arno Dübel (Aktiv)
+('4C 56 47 4A', 4, 1, datetime('now','-19 days')), -- Sebastian Meisinger (Aktiv)
+('E3 95 B9 0D', 5, 0, datetime('now','-17 days')); -- Marc Menk (Inaktiv/Gesperrt)
 
 -- 3. Tabelle Access Log: Szenarien mit den neuen Kommentaren
 INSERT INTO access_log (card_uid, access_time, access_granted, note) VALUES
 -- Erfolgreiche Zugriffe
-('43C6D418', datetime('now','-5 days','+08 hours'), 1, 'Karte autorisiert'),
-('B39FD6EC', datetime('now','-5 days','+09 hours'), 1, 'Karte autorisiert'),
-('33B3AF0D', datetime('now','-4 days','+08 hours'), 1, 'Karte autorisiert'),
+('43 C6 D4 18', datetime('now','-5 days','+08 hours'), 1, 'Karte autorisiert'),
+('B3 9F D6 EC', datetime('now','-5 days','+09 hours'), 1, 'Karte autorisiert'),
+('33 B3 AF 0D', datetime('now','-4 days','+08 hours'), 1, 'Karte autorisiert'),
 
 -- Karte existiert, aber nicht autorisiert (Marc Menk)
-('E395B90D', datetime('now','-4 days','+10 hours'), 0, 'Karte nicht autorisiert'),
+('E3 95 B9 0D', datetime('now','-4 days','+10 hours'), 0, 'Karte nicht autorisiert'),
 
 -- Karte komplett unbekannt (Fremde UID)
-('DEADBEEF', datetime('now','-3 days','+12 hours'), 0, 'Karte nicht registriert'),
+('DE AD BE EF', datetime('now','-3 days','+12 hours'), 0, 'Karte nicht registriert'),
 
 -- Weitere gemischte Logs
-('4C56474A', datetime('now','-3 days','+08 hours'), 1, 'Karte autorisiert'),
-('43C6D418', datetime('now','-2 days','+08 hours'), 1, 'Karte autorisiert'),
-('E395B90D', datetime('now','-2 days','+14 hours'), 0, 'Karte nicht autorisiert'),
-('11223344', datetime('now','-1 days','+23 hours'), 0, 'Karte nicht registriert'),
-('B39FD6EC', datetime('now','-1 days','+07 hours'), 1, 'Karte autorisiert'),
-('33B3AF0D', datetime('now','-1 days','+08 hours'), 1, 'Karte autorisiert'),
-('4C56474A', datetime('now','-0 days','+09 hours'), 1, 'Karte autorisiert');
+('4C 56 47 4A', datetime('now','-3 days','+08 hours'), 1, 'Karte autorisiert'),
+('43 C6 D4 18', datetime('now','-2 days','+08 hours'), 1, 'Karte autorisiert'),
+('E3 95 B9 0D', datetime('now','-2 days','+14 hours'), 0, 'Karte nicht autorisiert'),
+('11 22 33 44', datetime('now','-1 days','+23 hours'), 0, 'Karte nicht registriert'),
+('B3 9F D6 EC', datetime('now','-1 days','+07 hours'), 1, 'Karte autorisiert'),
+('33 B3 AF 0D', datetime('now','-1 days','+08 hours'), 1, 'Karte autorisiert'),
+('4C 56 47 4A', datetime('now','-1 days','+09 hours'), 1, 'Karte autorisiert');
