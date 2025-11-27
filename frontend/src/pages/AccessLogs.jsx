@@ -79,18 +79,18 @@ function AccessLogs() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div className="card bg-blue-50 dark:bg-blue-900/20">
           <p className="text-sm font-medium text-blue-600 dark:text-blue-400">Gesamt</p>
-          <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{filteredLogs.length}</p>
+          <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">{logs.length}</p>
         </div>
         <div className="card bg-green-50 dark:bg-green-900/20">
           <p className="text-sm font-medium text-green-600 dark:text-green-400">Gewährt</p>
           <p className="text-2xl font-bold text-green-900 dark:text-green-100">
-            {filteredLogs.filter(log => log.access_granted).length}
+            {logs.filter(log => log.access_granted).length}
           </p>
         </div>
         <div className="card bg-red-50 dark:bg-red-900/20">
           <p className="text-sm font-medium text-red-600 dark:text-red-400">Verweigert</p>
           <p className="text-2xl font-bold text-red-900 dark:text-red-100">
-            {filteredLogs.filter(log => !log.access_granted).length}
+            {logs.filter(log => !log.access_granted).length}
           </p>
         </div>
       </div>
