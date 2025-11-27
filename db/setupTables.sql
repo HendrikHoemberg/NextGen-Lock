@@ -20,7 +20,7 @@ CREATE TABLE rfid_card (
 CREATE TABLE access_log (
     log_id         INTEGER PRIMARY KEY AUTOINCREMENT,
     card_uid       TEXT NOT NULL,
-    access_time    TEXT NOT NULL DEFAULT (datetime('now')),
+    access_time    TEXT NOT NULL DEFAULT (datetime('now', 'utc')),
     access_granted INTEGER NOT NULL,          
     note           TEXT
 );
