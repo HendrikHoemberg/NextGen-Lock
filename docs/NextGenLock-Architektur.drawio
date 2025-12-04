@@ -43,7 +43,7 @@
         <mxCell id="user-label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=1;" value="Admin&#xa;(Browser)" vertex="1">
           <mxGeometry height="30" width="70" x="825" y="610" as="geometry" />
         </mxCell>
-        <mxCell id="hw-layer" parent="1" style="swimlane;horizontal=1;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;rounded=1;fontStyle=1;" value="Hardware-Ebene" vertex="1">
+        <mxCell id="hw-layer" parent="1" style="swimlane;horizontal=1;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;rounded=1;fontStyle=1;fontSize=16;" value="Hardware-Ebene" vertex="1">
           <mxGeometry height="320" width="260" x="40" y="210" as="geometry" />
         </mxCell>
         <mxCell id="arduino" parent="hw-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;verticalAlign=middle;fontStyle=1;" value="Arduino Uno&#xa;(Mikrocontroller)" vertex="1">
@@ -61,7 +61,7 @@
         <mxCell id="arrow-rfid-arduino" edge="1" parent="hw-layer" source="rfid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;strokeWidth=2;strokeColor=#d79b00;" target="arduino">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="backend-layer" parent="1" style="swimlane;horizontal=1;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;rounded=1;fontStyle=1;" value="Backend-Ebene" vertex="1">
+        <mxCell id="backend-layer" parent="1" style="swimlane;horizontal=1;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;rounded=1;fontStyle=1;fontSize=16;" value="Backend-Ebene" vertex="1">
           <mxGeometry height="320" width="260" x="380" y="210" as="geometry" />
         </mxCell>
         <mxCell id="nodejs" parent="backend-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" value="Node.js Server&#xa;Express.js" vertex="1">
@@ -90,7 +90,7 @@
         <mxCell id="serial-module" parent="backend-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" value="SerialPort&#xa;Arduino-Kommunikation" vertex="1">
           <mxGeometry height="45" width="150" x="55" y="120" as="geometry" />
         </mxCell>
-        <mxCell id="frontend-layer" parent="1" style="swimlane;horizontal=1;startSize=30;fillColor=#deebf7;strokeColor=#6c8ebf;rounded=1;fontStyle=1;" value="Frontend-Ebene" vertex="1">
+        <mxCell id="frontend-layer" parent="1" style="swimlane;horizontal=1;startSize=30;fillColor=#deebf7;strokeColor=#6c8ebf;rounded=1;fontStyle=1;fontSize=16;" value="Frontend-Ebene" vertex="1">
           <mxGeometry height="320" width="180" x="720" y="210" as="geometry" />
         </mxCell>
         <mxCell id="react" parent="frontend-layer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" value="React App&#xa;Vite Build Tool" vertex="1">
