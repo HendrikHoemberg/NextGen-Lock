@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0" version="29.2.3">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:146.0) Gecko/20100101 Firefox/146.0" version="29.2.4">
   <diagram id="NextGenLock-Architecture" name="Systemarchitektur">
-    <mxGraphModel dx="1018" dy="562" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="950" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1425" dy="2018" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="950" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -129,8 +129,8 @@
         <mxCell id="table-rfid" parent="1" style="shape=table;startSize=0;container=0;collapsible=0;childLayout=tableLayout;fontSize=10;fillColor=#fff;strokeColor=#82b366;rounded=1;fontStyle=1;" value="rfid_card&#xa;card_uid, user_id,&#xa;authorized, added_on" vertex="1">
           <mxGeometry height="50" width="110" x="390" y="670" as="geometry" />
         </mxCell>
-        <mxCell id="table-log" parent="1" style="shape=table;startSize=0;container=0;collapsible=0;childLayout=tableLayout;fontSize=10;fillColor=#fff;strokeColor=#82b366;rounded=1;fontStyle=1;" value="access_log&#xa;log_id, card_uid,&#xa;access_time, granted" vertex="1">
-          <mxGeometry height="50" width="110" x="520" y="640" as="geometry" />
+        <mxCell id="table-log" parent="1" style="shape=table;startSize=0;container=0;collapsible=0;childLayout=tableLayout;fontSize=10;fillColor=#fff;strokeColor=#82b366;rounded=1;fontStyle=1;" value="access_log&#xa;log_id, card_uid,&#xa;access_time, &#xa;access_granted,&#xa;note" vertex="1">
+          <mxGeometry height="70" width="110" x="520" y="630" as="geometry" />
         </mxCell>
         <mxCell id="fk-arrow" edge="1" parent="1" source="table-rfid" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#82b366;dashed=1;endArrow=ERone;endFill=0;startArrow=ERmany;startFill=0;" target="table-user">
           <mxGeometry relative="1" as="geometry" />
@@ -190,27 +190,6 @@
               <mxPoint x="80" y="352" />
             </Array>
           </mxGeometry>
-        </mxCell>
-        <mxCell id="tools-box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=1;" value="" vertex="1">
-          <mxGeometry height="120" width="860" x="40" y="750" as="geometry" />
-        </mxCell>
-        <mxCell id="tools-title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Eingesetzte Softwarewerkzeuge&lt;/font&gt;" vertex="1">
-          <mxGeometry height="20" width="320" x="50" y="762.5" as="geometry" />
-        </mxCell>
-        <mxCell id="tools-content" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Entwicklung: VS Code, PlatformIO (Arduino IDE)&lt;br&gt;Frontend: Vite, React, TailwindCSS, Axios&lt;br&gt;Backend: Node.js, Express.js, better-sqlite3, serialport&lt;br&gt;Datenbank: SQLite 3&lt;/font&gt;" vertex="1">
-          <mxGeometry height="55" width="400" x="50" y="782.5" as="geometry" />
-        </mxCell>
-        <mxCell id="tools-content2" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Hardware: Arduino Uno, MFRC522 RFID Reader&lt;br&gt;Protokolle: SPI (RFID-Arduino), Serial/USB (Arduino-Backend), REST/HTTP/JSON (Backend-Frontend)&lt;br&gt;Versionskontrolle: Git, GitHub&lt;/font&gt;" vertex="1">
-          <mxGeometry height="55" width="440" x="450" y="780" as="geometry" />
-        </mxCell>
-        <mxCell id="flow-box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e6550d;strokeWidth=1;strokeDasharray=3 3;" value="" vertex="1">
-          <mxGeometry height="110" width="860" x="40" y="890" as="geometry" />
-        </mxCell>
-        <mxCell id="flow-title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontStyle=1;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Datenfluss: Zugriffskontrolle&lt;/font&gt;" vertex="1">
-          <mxGeometry height="20" width="260" x="50" y="900" as="geometry" />
-        </mxCell>
-        <mxCell id="flow-content" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;1. RFID-Karte - MFRC522 - Arduino - Backend (Serial USB, 9600 Baud: USER ID tag : XX XX XX XX)&lt;br&gt;2. Backend prüft card_uid in SQLite - INSERT access_log - Antwort an Arduino (GRANTED / DENIED)&lt;br&gt;3. Arduino - LED (grün/rot) + Buzzer Feedback&lt;/font&gt;" vertex="1">
-          <mxGeometry height="45" width="840" x="50" y="922.5" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
