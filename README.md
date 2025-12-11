@@ -9,19 +9,19 @@ Full-stack RFID access control system with Arduino hardware integration, React f
 ## Technology Stack
 
 ### Frontend
-- **React 19** - UI Framework
-- **Vite 7** - Build Tool & Dev Server
-- **Tailwind CSS 4** - Styling with PostCSS
-- **React Router DOM 7** - Navigation
-- **Axios** - HTTP Client
-- **date-fns 4** - Date Formatting
-- **Lucide React** - Icons
+- **React 19.2** - UI Framework
+- **Vite 7.2** - Build Tool & Dev Server
+- **Tailwind CSS 4.1** - Styling with PostCSS
+- **React Router DOM 7.9** - Navigation
+- **Axios 1.6** - HTTP Client
+- **date-fns 4.1** - Date Formatting
+- **Lucide React 0.554** - Icons
 
 ### Backend
-- **Node.js** with **Express 4** - Web Server
-- **better-sqlite3** - SQLite Database Driver
-- **SerialPort** - Arduino Communication
-- **CORS** - Cross-Origin Resource Sharing
+- **Node.js** with **Express 4.18** - Web Server
+- **better-sqlite3 11.0** - SQLite Database Driver
+- **SerialPort 12.0** - Arduino Communication
+- **CORS 2.8** - Cross-Origin Resource Sharing
 
 ### Hardware
 - **Arduino** - Microcontroller (PlatformIO)
@@ -143,20 +143,7 @@ node resetDb.js
 
 ### API Configuration
 
-The frontend communicates with the backend via Vite proxy:
-
-```javascript
-// vite.config.js
-server: {
-  port: 3000,
-  proxy: {
-    '/api': {
-      target: 'http://localhost:5000',
-      changeOrigin: true,
-    },
-  },
-}
-```
+The frontend communicates with the backend via Vite dev server on port 3000, while the backend runs on port 5000.
 
 API services are structured in `frontend/src/services/api.js` with three main modules:
 - `usersAPI` - User management
